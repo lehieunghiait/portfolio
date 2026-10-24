@@ -1,0 +1,8 @@
+# Cloudflare Pages: các ảnh do Next.js tạo ra không có đuôi file, cần khai báo đúng loại ảnh
+# để Facebook, Zalo, LinkedIn hiển thị được ảnh xem trước.
+/opengraph-image-*
+  Content-Type: image/png
+/en/opengraph-image-*
+  Content-Type: image/png
+/apple-icon
+  Content-Type: image/png

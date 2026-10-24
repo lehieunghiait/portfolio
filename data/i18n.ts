@@ -1,0 +1,71 @@
+// Chữ trên giao diện (menu, nút, tiêu đề mục...) cho từng ngôn ngữ.
+import type { Lang } from "./profile";
+
+// Đường dẫn của mỗi ngôn ngữ: tiếng Việt ở gốc, tiếng Anh dưới /en
+export const paths: Record<Lang, { home: string; cv: string }> = {
+  vi: { home: "/", cv: "/cv" },
+  en: { home: "/en", cv: "/en/cv" },
+};
+
+export const ui = {
+  vi: {
+    nav: { about: "Giới thiệu", experience: "Kinh nghiệm", projects: "Dự án", contact: "Liên hệ" },
+    viewCv: "Xem CV",
+    available: "Đang tìm kiếm cơ hội mới",
+    hello: (name: string) => `Xin chào, tôi là ${name}`,
+    seeProjects: "Xem dự án",
+    contactMe: "Liên hệ hợp tác",
+    photoAlt: (name: string) => `Ảnh của ${name}`,
+    online: "Sẵn sàng làm việc",
+    aboutTitle: "Giới thiệu & chuyên môn",
+    experienceTitle: "Kinh nghiệm làm việc",
+    projectsTitle: "Dự án tiêu biểu",
+    contactTitle: ["Hãy cùng trao đổi về", "dự án tiếp theo", "của bạn."],
+    contactLead: "Tôi luôn sẵn sàng trao đổi về cơ hội việc làm, hợp tác dự án hoặc tư vấn giải pháp kỹ thuật. Hãy gửi email để chúng ta bắt đầu.",
+    footer: "Thiết kế & phát triển bằng Next.js.",
+    backToTop: "Lên đầu trang ↑",
+    theme: { toLight: "Chuyển sang giao diện sáng", toDark: "Chuyển sang giao diện tối" },
+    language: "Ngôn ngữ",
+    cv: {
+      back: "← Portfolio",
+      download: "Tải CV (PDF)",
+      contact: "Liên hệ",
+      skills: "Kỹ năng",
+      languages: "Ngôn ngữ",
+      summary: "Tóm tắt",
+      experience: "Kinh nghiệm làm việc",
+      projects: "Dự án",
+      education: "Học vấn",
+    },
+  },
+  en: {
+    nav: { about: "About", experience: "Experience", projects: "Projects", contact: "Contact" },
+    viewCv: "View CV",
+    available: "Open to new opportunities",
+    hello: (name: string) => `Hi, I'm ${name}`,
+    seeProjects: "View projects",
+    contactMe: "Get in touch",
+    photoAlt: (name: string) => `Photo of ${name}`,
+    online: "Available for work",
+    aboutTitle: "About & expertise",
+    experienceTitle: "Professional experience",
+    projectsTitle: "Selected projects",
+    contactTitle: ["Let's discuss", "your next project", "together."],
+    contactLead: "I'm open to job opportunities, project collaborations and technical consulting. Send me an email and let's get started.",
+    footer: "Designed & built with Next.js.",
+    backToTop: "Back to top ↑",
+    theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme" },
+    language: "Language",
+    cv: {
+      back: "← Portfolio",
+      download: "Download CV (PDF)",
+      contact: "Contact",
+      skills: "Skills",
+      languages: "Languages",
+      summary: "Professional summary",
+      experience: "Professional experience",
+      projects: "Projects",
+      education: "Education",
+    },
+  },
+} satisfies Record<Lang, unknown>;

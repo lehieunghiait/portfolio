@@ -191,7 +191,7 @@ const content: Record<Lang, Content> = {
     ],
     education: [
       {
-        school: "Trường Đại học Công Nghệ TP. Hồ Chí Minh",
+        school: "Trường Đại học Công nghệ TP. Hồ Chí Minh (HUTECH)",
         degree: "Cử nhân Công nghệ Thông tin",
         period: "2020 — 2025",
       },

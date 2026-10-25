@@ -79,6 +79,11 @@ export function PersonJsonLd({ lang }: { lang: Lang }) {
         email: `mailto:${profile.email}`,
         sameAs: profile.links.map((l) => l.url),
         knowsAbout: profile.skills.flatMap((g) => g.items),
+        alumniOf: profile.education.map((e) => ({ "@type": "CollegeOrUniversity", name: e.school })),
+        // Nơi làm hiện tại: kinh nghiệm chưa có năm kết thúc
+        worksFor: profile.experience
+          .filter((e) => /present|hiện tại/i.test(e.period))
+          .map((e) => ({ "@type": "Organization", name: e.company })),
       },
       {
         "@type": "WebSite",

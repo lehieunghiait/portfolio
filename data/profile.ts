@@ -46,6 +46,8 @@ type Content = {
   location: string;
   stats: { value: string; label: string }[];
   skills: { group: string; items: string[] }[];
+  // Mảng chuyên môn ở mục "About & expertise": cách bạn làm việc, kèm công cụ chính
+  expertise: { icon: "frontend" | "backend" | "ops"; title: string; description: string; tools: string[] }[];
   experience: Experience[];
   projects: Project[];
   education: Education[];
@@ -91,6 +93,26 @@ const content: Record<Lang, Content> = {
       {
         group: "Hạ tầng & DevOps",
         items: ["Cloudflare", "Docker", "Git", "CI/CD"],
+      },
+    ],
+    expertise: [
+      {
+        icon: "frontend",
+        title: "Phát triển giao diện",
+        description: "Xây dựng giao diện web nhanh, dễ dùng và hiển thị tốt trên mọi thiết bị với React và Next.js.",
+        tools: ["TypeScript", "React", "Next.js"],
+      },
+      {
+        icon: "backend",
+        title: "API & backend",
+        description: "Thiết kế và phát triển REST API, dịch vụ backend với Node.js và PostgreSQL, có kiểm thử tự động.",
+        tools: ["Node.js", "REST API", "PostgreSQL"],
+      },
+      {
+        icon: "ops",
+        title: "Triển khai & vận hành",
+        description: "Đưa ứng dụng lên môi trường thật với Docker, CI/CD và Cloudflare, đảm bảo hệ thống chạy ổn định.",
+        tools: ["Docker", "CI/CD", "Cloudflare"],
       },
     ],
     experience: [
@@ -198,6 +220,26 @@ const content: Record<Lang, Content> = {
       {
         group: "Infrastructure & DevOps",
         items: ["Cloudflare", "Docker", "Git", "CI/CD"],
+      },
+    ],
+    expertise: [
+      {
+        icon: "frontend",
+        title: "Frontend engineering",
+        description: "Building fast, accessible and responsive web interfaces with React and Next.js.",
+        tools: ["TypeScript", "React", "Next.js"],
+      },
+      {
+        icon: "backend",
+        title: "APIs & backend",
+        description: "Designing and developing REST APIs and backend services with Node.js and PostgreSQL, backed by automated tests.",
+        tools: ["Node.js", "REST API", "PostgreSQL"],
+      },
+      {
+        icon: "ops",
+        title: "Deployment & operations",
+        description: "Shipping applications to production with Docker, CI/CD and Cloudflare, and keeping them stable.",
+        tools: ["Docker", "CI/CD", "Cloudflare"],
       },
     ],
     experience: [

@@ -16,6 +16,22 @@ const covers = [
   "linear-gradient(135deg, #a855f7 0%, #ec4899 100%)",
 ];
 
+// Icon nét cho từng mảng chuyên môn (khóa `icon` trong data/profile.ts)
+const EXPERTISE_ICONS = {
+  // Cửa sổ trình duyệt với dấu </>
+  frontend: (
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M3 8.5h18M10 12.5l-2 2 2 2M14 12.5l2 2-2 2" /></svg>
+  ),
+  // Cơ sở dữ liệu
+  backend: (
+    <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.8" /><path d="M4.5 5.5v6.5c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V5.5M4.5 12v6.5c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V12" /></svg>
+  ),
+  // Tên lửa
+  ops: (
+    <svg viewBox="0 0 24 24"><path d="M12 15.5 8.5 12C10 7 13.5 3.5 20.5 3.5c0 7-3.5 10.5-8.5 12Z" /><path d="M8.5 12H5l2.5-3.5h4M12 15.5V19l3.5-2.5v-4" /><circle cx="15.2" cy="8.8" r="1.4" /><path d="M6.5 17.5c-1 .4-2 1.6-2 3 1.4 0 2.6-1 3-2" /></svg>
+  ),
+} as const;
+
 function SectionHead({ index, eyebrow, title }: { index: string; eyebrow: string; title: string }) {
   return (
     <header className={s.sectionHead}>
@@ -111,12 +127,16 @@ export function Portfolio({ lang }: { lang: Lang }) {
               </ul>
             </div>
             <div className={s.skillGrid}>
-              {profile.skills.map((g) => (
-                <div key={g.group} className={s.skillCard} data-spotlight>
-                  <h3>{g.group}</h3>
-                  <ul className={s.chips}>
-                    {g.items.map((i) => <li key={i}>{i}</li>)}
-                  </ul>
+              {profile.expertise.map((x, i) => (
+                <div key={x.title} className={s.expertCard} data-spotlight>
+                  <div className={s.expertIcon} aria-hidden="true">{EXPERTISE_ICONS[x.icon]}</div>
+                  <div className={s.expertBody}>
+                    <h3><span className={s.expertNum}>0{i + 1}</span> {x.title}</h3>
+                    <p>{x.description}</p>
+                    <ul className={s.chips}>
+                      {x.tools.map((tool) => <li key={tool}>{tool}</li>)}
+                    </ul>
+                  </div>
                 </div>
               ))}
             </div>

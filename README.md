@@ -7,7 +7,7 @@ Bilingual (English / Vietnamese) personal portfolio, CV and technical blog — l
 ## Highlights
 
 - **Next.js 16 (App Router) static export** — no server runtime, hosted on Cloudflare Pages.
-- **Two languages, two root layouts** — English at `/`, Vietnamese at `/vi`, with hreflang, sitemap and per-language Open Graph images.
+- **Two languages, one root layout** — English at `/`, Vietnamese at `/vi`; switching language is a client-side navigation (no reload), with hreflang, sitemap and per-language Open Graph images.
 - **Client-side navigation with view transitions** — project screenshots and post titles morph between list and detail pages.
 - **Dark / light themes** with a circular reveal transition, scroll-driven animations and `prefers-reduced-motion` support.
 - **Printable CV** — `/cv` page plus PDFs generated at build time with headless Chrome.

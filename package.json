@@ -12,7 +12,8 @@
     "@clerk/react": "^6.18.1",
     "next": "16.4.3",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "shiki": "^4.5.0"
   },
   "devDependencies": {
     "@types/node": "^20",

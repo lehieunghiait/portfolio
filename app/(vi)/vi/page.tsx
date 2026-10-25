@@ -7,8 +7,8 @@ export const metadata = pageMetadata("vi", { hrefs: { vi: paths.vi.home, en: pat
 export default function Page() {
   return (
     <>
-      <PersonJsonLd lang="vi" />
       <Portfolio lang="vi" />
+      <PersonJsonLd lang="vi" />
     </>
   );
 }

@@ -15,7 +15,7 @@ export function ProjectDetail({ lang, slug }: { lang: Lang; slug: string }) {
   const others = profile.projects.filter((o) => o.slug !== slug);
 
   return (
-    <>
+    <div className="page">
       <SiteHeader lang={lang} hrefs={{ vi: projectPath("vi", slug), en: projectPath("en", slug) }} />
       <main id="top" className={d.main}>
         <article className={d.article}>
@@ -80,6 +80,6 @@ export function ProjectDetail({ lang, slug }: { lang: Lang; slug: string }) {
         </article>
       </main>
       <SiteFooter lang={lang} />
-    </>
+    </div>
   );
 }

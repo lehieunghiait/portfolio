@@ -52,7 +52,7 @@ export function Portfolio({ lang }: { lang: Lang }) {
   const firstName = words[words.length - 1];
 
   return (
-    <>
+    <div className="page">
       <SiteHeader lang={lang} hrefs={{ vi: paths.vi.home, en: paths.en.home }} onHome />
 
       <main id="top" className={s.main}>
@@ -234,6 +234,6 @@ export function Portfolio({ lang }: { lang: Lang }) {
       </main>
 
       <SiteFooter lang={lang} />
-    </>
+    </div>
   );
 }

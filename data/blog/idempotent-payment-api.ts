@@ -2,6 +2,7 @@ import type { Post } from "../posts";
 
 export const post: Post = {
   slug: "idempotent-payment-api",
+    topic: "banking",
   date: "2026-10-25",
   cover: "/blog/idempotent-payment-api/cover.svg",
   tags: ["API Design", "Banking", "Node.js", "Resilience"],

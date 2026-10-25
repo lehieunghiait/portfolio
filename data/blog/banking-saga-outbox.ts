@@ -2,6 +2,7 @@ import type { Post } from "../posts";
 
 export const post: Post = {
   slug: "banking-microservices-saga-outbox",
+    topic: "banking",
   date: "2026-10-25",
   cover: "/blog/banking-microservices-saga-outbox/cover.svg",
   tags: ["Microservices", "Banking", "Kafka", "PostgreSQL"],

@@ -2,10 +2,11 @@ import type { Lang } from "@/data/profile";
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { paths, postPath, ui } from "@/data/i18n";
-import { getPost, posts, type Block } from "@/data/posts";
+import { getPost, posts, postsByTopic, topicIds, topics, type Block, type Post, type TopicId } from "@/data/posts";
 import { SiteFooter, SiteHeader } from "./site-header";
 import d from "./detail.module.css";
 import { SmartImg } from "../components/smart-img";
+import { highlight } from "../_shared/highlight";
 
 // Ước tính thời gian đọc (~200 từ/phút)
 function readingMinutes(blocks: Block[]) {
@@ -16,50 +17,76 @@ function readingMinutes(blocks: Block[]) {
   return Math.max(1, Math.round(words / 200));
 }
 
+// Thẻ bài viết dùng ở danh sách chủ đề và mục "Cùng chủ đề"
+function PostCard({ lang, post, headingLevel = "h3" }: { lang: Lang; post: Post; headingLevel?: "h2" | "h3" }) {
+  const t = ui[lang];
+  const c = post.content[lang];
+  const H = headingLevel;
+  return (
+    <Link href={postPath(lang, post.slug)} className={`${d.postCard} ${post.cover ? d.hasCover : ""}`} data-spotlight>
+      {post.cover && (
+        <ViewTransition name={`cover-${post.slug}`} share="morph" default="none">
+          <SmartImg fade className={d.postCover} src={post.cover} alt="" width={1200} height={600} loading="lazy" />
+        </ViewTransition>
+      )}
+      <p className={d.postMeta}>
+        <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
+      </p>
+      <ViewTransition name={`post-${post.slug}`} share="morph" default="none"><H>{c.title}</H></ViewTransition>
+      <p className={d.excerpt}>{c.excerpt}</p>
+      <ul className={d.chips}>{post.tags.map((x) => <li key={x}>{x}</li>)}</ul>
+    </Link>
+  );
+}
+
+const topicStyle = (id: TopicId) => ({ "--topic": topics[id].color }) as React.CSSProperties;
+
 export function BlogIndex({ lang }: { lang: Lang }) {
   const t = ui[lang];
+  const groups = topicIds.map((id) => ({ id, posts: postsByTopic(id) })).filter((g) => g.posts.length > 0);
   return (
-    <>
+    <div className="page">
       <SiteHeader lang={lang} hrefs={{ vi: paths.vi.blog, en: paths.en.blog }} />
       <main id="top" className={d.main}>
-        <div className={d.article}>
+        <div className={d.blogWrap}>
           <header className={d.header}>
             <p className={d.eyebrow}>{t.blog.title}</p>
             <h1 className={d.title}>{t.blog.heading}</h1>
             <p className={d.lead}>{t.blog.lead}</p>
           </header>
           {posts.length === 0 && <p className={d.lead}>{t.blog.empty}</p>}
-          <ol className={d.postList}>
-            {posts.map((post) => {
-              const c = post.content[lang];
-              return (
-                <li key={post.slug}>
-                  <Link href={postPath(lang, post.slug)} className={`${d.postCard} ${post.cover ? d.hasCover : ""}`} data-spotlight>
-                    {post.cover && (
-                      <ViewTransition name={`cover-${post.slug}`} share="morph" default="none">
-                        <SmartImg fade className={d.postCover} src={post.cover} alt="" width={1200} height={600} loading="lazy" />
-                      </ViewTransition>
-                    )}
-                    <p className={d.postMeta}>
-                      <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
-                    </p>
-                    <ViewTransition name={`post-${post.slug}`} share="morph" default="none"><h2>{c.title}</h2></ViewTransition>
-                    <p>{c.excerpt}</p>
-                    <ul className={d.chips}>{post.tags.map((x) => <li key={x}>{x}</li>)}</ul>
-                    <span className={d.readMore}>{t.blog.readMore} <span aria-hidden>→</span></span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ol>
+
+          {/* Mục lục chủ đề: nhảy tới từng nhóm bài */}
+          <nav className={d.topicNav} aria-label={t.blog.topicsLabel}>
+            {groups.map(({ id, posts: list }) => (
+              <a key={id} href={`#${id}`} className={d.topicPill} style={topicStyle(id)}>
+                <span className={d.topicDot} aria-hidden />
+                {topics[id][lang].name}
+                <span className={d.topicCount}>{list.length}</span>
+              </a>
+            ))}
+          </nav>
+
+          {groups.map(({ id, posts: list }) => (
+            <section key={id} id={id} className={d.topicSection} style={topicStyle(id)} aria-labelledby={`${id}-title`}>
+              <header className={d.topicHead}>
+                <h2 id={`${id}-title`}><span className={d.topicDot} aria-hidden />{topics[id][lang].name}</h2>
+                <p>{topics[id][lang].description}</p>
+                <span className={d.topicCount}>{t.blog.count(list.length)}</span>
+              </header>
+              <ul className={d.postGrid}>
+                {list.map((post) => <li key={post.slug}><PostCard lang={lang} post={post} /></li>)}
+              </ul>
+            </section>
+          ))}
         </div>
       </main>
       <SiteFooter lang={lang} />
-    </>
+    </div>
   );
 }
 
-function BlockView({ block }: { block: Block }) {
+async function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case "h2": return <h2>{block.text}</h2>;
     case "p": return <p>{block.text}</p>;
@@ -75,12 +102,14 @@ function BlockView({ block }: { block: Block }) {
           {block.caption && <figcaption>{block.caption}</figcaption>}
         </figure>
       );
-    case "code":
+    case "code": {
+      const html = await highlight(block.code, block.lang);
       return (
         <pre className={d.code} data-lang={block.lang}>
-          <code>{block.code}</code>
+          {html ? <code dangerouslySetInnerHTML={{ __html: html }} /> : <code>{block.code}</code>}
         </pre>
       );
+    }
   }
 }
 
@@ -88,14 +117,21 @@ export function BlogPost({ lang, slug }: { lang: Lang; slug: string }) {
   const t = ui[lang];
   const post = getPost(slug)!;
   const c = post.content[lang];
+  const topic = topics[post.topic];
+  // Bài khác cùng chủ đề; chủ đề chỉ có một bài thì gợi ý các bài mới nhất
+  const sameTopic = postsByTopic(post.topic).filter((p) => p.slug !== slug);
+  const related = (sameTopic.length ? sameTopic : posts.filter((p) => p.slug !== slug)).slice(0, 2);
   return (
-    <>
+    <div className="page">
       <SiteHeader lang={lang} hrefs={{ vi: postPath("vi", slug), en: postPath("en", slug) }} />
       <main id="top" className={d.main}>
         <article className={d.article}>
           <Link href={paths[lang].blog} className={d.back}>{t.blog.back}</Link>
           <header className={d.header}>
             <p className={d.postMeta}>
+              <Link href={`${paths[lang].blog}#${post.topic}`} className={d.topicBadge} style={topicStyle(post.topic)}>
+                <span className={d.topicDot} aria-hidden />{topic[lang].name}
+              </Link>
               <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
             </p>
             <ViewTransition name={`post-${post.slug}`} share="morph" default="none"><h1 className={d.title}>{c.title}</h1></ViewTransition>
@@ -111,8 +147,19 @@ export function BlogPost({ lang, slug }: { lang: Lang; slug: string }) {
             {c.body.map((b, i) => <BlockView key={i} block={b} />)}
           </div>
         </article>
+        {related.length > 0 && (
+          <aside className={d.related} style={topicStyle(post.topic)}>
+            <header className={d.relatedHead}>
+              <h2>{sameTopic.length ? t.blog.related : t.blog.title}</h2>
+              <Link href={`${paths[lang].blog}#${post.topic}`}>{t.blog.moreTopic(topic[lang].name)}</Link>
+            </header>
+            <ul className={d.postGrid}>
+              {related.map((p) => <li key={p.slug}><PostCard lang={lang} post={p} /></li>)}
+            </ul>
+          </aside>
+        )}
       </main>
       <SiteFooter lang={lang} />
-    </>
+    </div>
   );
 }

@@ -386,6 +386,257 @@ DEPLOY = {
 }
 
 
+# ---------------------------------------------------------------- View Transitions
+
+def vt_lifecycle(L):
+    c = Canvas()
+    W, H = 960, 330
+    steps = [(L["s1"], L["s1b"], VIOLET), (L["s2"], L["s2b"], CYAN), (L["s3"], L["s3b"], VIOLET),
+             (L["s4"], L["s4b"], PINK), (L["s5"], L["s5b"], GREEN)]
+    for i, (a, b, col) in enumerate(steps):
+        x = 24 + i * 186
+        c.add(box(x, 40, 164, 92, a, b, col, tag=f"0{i + 1}"))
+        if i < len(steps) - 1:
+            c.add(arrow(x + 166, 86, x + 184, 86, MUTED))
+    # dải thời gian: người dùng thấy gì
+    c.add(rect(24, 168, 912, 120, fill=PANEL, stroke=LINE, r=14), t(44, 196, L["sees"], 13, MUTED, 700))
+    # bước 1–3: trang cũ đứng yên · bước 4: ảnh chụp chuyển cảnh · bước 5: trang mới thật
+    bands = [(44, 3 * 186 - 42, L["old_live"], FAINT), (24 + 3 * 186, 164, L["snapshots"], PINK),
+             (24 + 4 * 186, 164, L["new_live"], GREEN)]
+    for x, w, label, col in bands:
+        c.add(f'<rect x="{x}" y="214" width="{w}" height="34" rx="8" fill="{col}" fill-opacity=".18" stroke="{col}" stroke-opacity=".6"/>',
+              t(x + w / 2, 236, label, 12, TEXT, 600, "middle"))
+    c.add(t(44, 274, L["note"], 12, FAINT, 500))
+    return c.render(W, H, L["title"])
+
+
+def vt_tree(L):
+    c = Canvas()
+    W, H = 960, 400
+    mono = lambda x, y, s, col=TEXT, size=14: t(x, y, s, size, col, 600, mono=True)
+    c.add(rect(24, 24, 560, 352, fill=PANEL, stroke=LINE, r=16))
+    rows = [
+        (0, "::view-transition", MUTED, None),
+        (1, "::view-transition-group(root)", VIOLET, L["g_root"]),
+        (2, "::view-transition-image-pair(root)", VIOLET, None),
+        (3, "::view-transition-old(root)", FAINT, L["old"]),
+        (3, "::view-transition-new(root)", GREEN, L["new"]),
+        (1, "::view-transition-group(shot-x)", PINK, L["g_named"]),
+        (2, "::view-transition-image-pair(shot-x)", PINK, None),
+        (3, "::view-transition-old(shot-x)", FAINT, None),
+        (3, "::view-transition-new(shot-x)", GREEN, None),
+    ]
+    for i, (lvl, s, col, _) in enumerate(rows):
+        y = 64 + i * 36
+        x = 48 + lvl * 26
+        if lvl:
+            c.add(f'<path d="M{x - 16},{y - 22} V{y - 5} H{x - 4}" fill="none" stroke="{LINE}" stroke-width="2"/>')
+        c.add(mono(x, y, s, col, 13.5))
+    # chú thích bên phải
+    notes = [(VIOLET, L["n1"], L["n1b"]), (PINK, L["n2"], L["n2b"]), (GREEN, L["n3"], L["n3b"])]
+    for i, (col, a, b) in enumerate(notes):
+        c.add(box(608, 24 + i * 120, 328, 104, a, b, col))
+    return c.render(W, H, L["title"])
+
+
+def vt_morph(L):
+    c = Canvas()
+    W, H = 960, 400
+    # trang danh sách
+    c.add(rect(24, 24, 380, 352, fill=PANEL, stroke=LINE, r=16), t(44, 54, L["list"], 13.5, MUTED, 700))
+    for i in range(4):
+        x, y = 44 + (i % 2) * 176, 74 + (i // 2) * 146
+        hl = i == 1
+        c.add(rect(x, y, 160, 130, fill=PANEL_2, stroke=PINK if hl else LINE, r=12, sw=2 if hl else 1.5))
+        c.add(f'<rect x="{x + 10}" y="{y + 10}" width="140" height="64" rx="8" fill="{PINK if hl else LINE}" fill-opacity="{.55 if hl else .6}"/>')
+        c.add(f'<rect x="{x + 10}" y="{y + 86}" width="{110 if hl else 96}" height="10" rx="5" fill="{CYAN if hl else LINE}"/>',
+              f'<rect x="{x + 10}" y="{y + 104}" width="70" height="8" rx="4" fill="{LINE}"/>')
+    # trang chi tiết
+    c.add(rect(556, 24, 380, 352, fill=PANEL, stroke=LINE, r=16), t(576, 54, L["detail"], 13.5, MUTED, 700))
+    c.add(f'<rect x="576" y="74" width="230" height="16" rx="8" fill="{CYAN}"/>')
+    c.add(f'<rect x="576" y="108" width="340" height="170" rx="12" fill="{PINK}" fill-opacity=".55" stroke="{PINK}" stroke-width="2"/>')
+    for i in range(3):
+        c.add(f'<rect x="576" y="{296 + i * 22}" width="{320 - i * 60}" height="9" rx="4.5" fill="{LINE}"/>')
+    c.add(arrow(370, 120, 572, 180, PINK, "shot-x", lx=490, ly=170, curve=-40, sw=2.5))
+    c.add(arrow(338, 165, 572, 82, CYAN, "title-x", lx=505, ly=80, curve=-20, sw=2, dash="6 5"))
+    c.add(rect(424, 300, 112, 60, fill=BG, stroke=LINE, r=10), t(480, 324, L["same"], 12, TEXT, 700, "middle"),
+          t(480, 344, "view-transition-name", 10.5, MUTED, 500, "middle", mono=True))
+    return c.render(W, H, L["title"])
+
+
+VT_LIFE = {
+    "vi": dict(title="Vòng đời một view transition", s1="Chụp cũ", s1b="ảnh trạng thái cũ", s2="Callback", s2b="cập nhật DOM",
+               s3="Chụp mới", s3b="ảnh trạng thái mới", s4="Animation", s4b="cây pseudo-element", s5="Hoàn tất", s5b="gỡ lớp phủ",
+               sees="NGƯỜI DÙNG NHÌN THẤY", old_live="Trang cũ (bị đóng băng)", snapshots="Ảnh chụp chuyển cảnh", new_live="Trang mới thật",
+               note="startViewTransition(update) → .updateCallbackDone → .ready → .finished"),
+    "en": dict(title="Lifecycle of a view transition", s1="Capture old", s1b="old state snapshot", s2="Callback", s2b="update the DOM",
+               s3="Capture new", s3b="new state snapshot", s4="Animate", s4b="pseudo-element tree", s5="Finish", s5b="remove overlay",
+               sees="WHAT THE USER SEES", old_live="Old page (frozen)", snapshots="Animated snapshots", new_live="Live new page",
+               note="startViewTransition(update) → .updateCallbackDone → .ready → .finished"),
+}
+VT_TREE = {
+    "vi": dict(title="Cây pseudo-element của View Transitions", g_root="", old="", new="", g_named="",
+               n1="group(root)", n1b="Cả trang; mặc định mờ chéo", n2="group(tên riêng)", n2b="Phần tử có view-transition-name",
+               n3="old / new", n3b="Ảnh cũ và mới: nơi viết animation"),
+    "en": dict(title="The View Transitions pseudo-element tree", g_root="", old="", new="", g_named="",
+               n1="group(root)", n1b="The whole page; cross-fades by default", n2="group(custom name)", n2b="Elements with a view-transition-name",
+               n3="old / new", n3b="Old and new snapshots: animate these"),
+}
+VT_MORPH = {
+    "vi": dict(title="Phần tử dùng chung bay từ danh sách sang trang chi tiết", list="Trang danh sách", detail="Trang chi tiết", same="Cùng tên"),
+    "en": dict(title="A shared element flying from list to detail page", list="List page", detail="Detail page", same="Same name"),
+}
+
+
+# ---------------------------------------------------------------- Clerk + Worker
+
+def auth_flow(L):
+    c = Canvas()
+    W, H = 960, 560
+    cols = [(110, L["browser"], VIOLET), (350, "Clerk", PINK), (600, "Worker", CYAN), (850, "D1", GREEN)]
+    for x, name, col in cols:
+        c.add(rect(x - 90, 24, 180, 46, fill=PANEL, stroke=col + "88", r=12), t(x, 53, name, 14, col, 700, "middle"),
+              f'<line x1="{x}" y1="74" x2="{x}" y2="480" stroke="{LINE}" stroke-width="2" stroke-dasharray="3 6"/>')
+    rows = [
+        (110, 350, VIOLET, L["r1"]),
+        (350, 110, PINK, L["r2"]),
+        (110, 600, VIOLET, "GET /admin/messages · Bearer JWT"),
+        (600, 600, CYAN, L["r4"]),
+        (600, 350, CYAN, L["r5"]),
+        (350, 600, PINK, "publicMetadata.role = admin"),
+        (600, 850, GREEN, "SELECT … FROM messages"),
+        (600, 110, GREEN, L["r8"]),
+    ]
+    y = 110
+    for x1, x2, col, label in rows:
+        if x1 == x2:
+            c.add(f'<path d="M{x1},{y - 8} h44 v26 h-38" fill="none" stroke="{col}" stroke-width="2" marker-end="url(#m{col.lstrip("#")})"/>',
+                  t(x1 + 56, y + 9, label, 13, col, 650))
+            c.markers.append(("m" + col.lstrip("#"), col))
+            y += 56
+            continue
+        c.add(arrow(x1, y, x2 + (-6 if x2 > x1 else 6), y, col, label, ly=y - 10, size=13))
+        y += 46
+    c.add(rect(24, 496, 912, 44, fill=AMBER + "10", stroke=AMBER + "44", r=10),
+          t(480, 523, L["footer"], 13, AMBER, 600, "middle"))
+    return c.render(W, H, L["title"])
+
+
+def auth_defense(L):
+    c = Canvas()
+    W, H = 960, 360
+    layers = [("CORS", L["l1"], PINK), (L["l2a"], L["l2"], VIOLET), ("azp", L["l3"], CYAN), (L["l4a"], L["l4"], AMBER)]
+    c.add(box(24, 130, 130, 84, "Request", "Bearer JWT", MUTED))
+    for i, (a, b, col) in enumerate(layers):
+        x = 190 + i * 164
+        c.add(rect(x, 40, 140, 264, fill=col + "0f", stroke=col + "66", r=14))
+        c.add(t(x + 70, 72, a, 15, col, 700, "middle"))
+        for j, line in enumerate(b.split("|")):
+            c.add(t(x + 70, 104 + j * 20, line, 12, MUTED, 500, "middle"))
+        c.add(rect(x + 20, 234, 100, 30, fill=RED + "14", stroke=RED + "55", r=8),
+              t(x + 70, 254, ["CORS ✗", "401", "401", "403"][i], 12.5, RED, 700, "middle", mono=True))
+        c.add(arrow(x - 22 if i else 156, 172, x - 4, 172, GREEN))
+    c.add(arrow(848, 172, 866, 172, GREEN))
+    c.add(box(870, 130, 66, 84, "D1", None, GREEN))
+    c.add(t(480, 336, L["footer"], 12.5, MUTED, 500, "middle"))
+    return c.render(W, H, L["title"])
+
+
+AUTH_FLOW = {
+    "vi": dict(title="Luồng đăng nhập và gọi API quản trị", browser="Trình duyệt /admin", r1="đăng nhập (SignIn, routing=hash)",
+               r2="phiên + session token (JWT ngắn hạn)", r4="verifyToken: chữ ký, hạn, azp", r5="users.getUser(sub)",
+               r8="200 · danh sách tin nhắn", footer="Secret key chỉ nằm ở Worker · Trang tĩnh không giữ bí mật nào"),
+    "en": dict(title="Signing in and calling the admin API", browser="Browser /admin", r1="sign in (SignIn, routing=hash)",
+               r2="session + short-lived JWT", r4="verifyToken: signature, expiry, azp", r5="users.getUser(sub)",
+               r8="200 · messages", footer="The secret key lives only in the Worker · The static page holds no secrets"),
+}
+AUTH_DEF = {
+    "vi": dict(title="Các lớp kiểm tra của Worker", l1="chỉ origin|của site", l2a="Chữ ký", l2="đúng khóa,|còn hạn",
+               l3="token phát cho|đúng website", l4a="Vai trò", l4="publicMetadata|.role = admin",
+               footer="Kiểm tra ở giao diện chỉ để hiển thị; quyết định thật nằm ở đây, cho mọi request"),
+    "en": dict(title="The Worker's layers of checks", l1="site origin|only", l2a="Signature", l2="right key,|not expired",
+               l3="issued for|this website", l4a="Role", l4="publicMetadata|.role = admin",
+               footer="UI checks are cosmetic; the real decision happens here, on every request"),
+}
+
+
+# ---------------------------------------------------------------- AI coding agents
+
+def agent_loop(L):
+    c = Canvas()
+    W, H = 960, 440
+    cx, cy, R = 320, 222, 168
+    c.add(f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="none" stroke="{LINE}" stroke-width="2" stroke-dasharray="4 7"/>')
+    nodes = [(L["plan"], L["plan_b"], VIOLET, -90), (L["act"], L["act_b"], CYAN, 0), (L["observe"], L["observe_b"], AMBER, 90), (L["verify"], L["verify_b"], GREEN, 180)]
+    pts = []
+    for a, b, col, ang in nodes:
+        x = cx + R * math.cos(math.radians(ang))
+        y = cy + R * math.sin(math.radians(ang))
+        pts.append((x, y))
+        c.add(box(x - 82, y - 36, 164, 72, a, b, col))
+    for i in range(4):
+        a0 = -90 + i * 90 + 30
+        a1 = a0 + 30
+        x0, y0 = cx + R * math.cos(math.radians(a0)), cy + R * math.sin(math.radians(a0))
+        x1, y1 = cx + R * math.cos(math.radians(a1)), cy + R * math.sin(math.radians(a1))
+        c.add(arrow(x0, y0, x1, y1, MUTED, sw=2.5))
+    c.add(t(cx, cy - 4, L["center"], 14, TEXT, 700, "middle"), t(cx, cy + 18, L["center_b"], 12, MUTED, 500, "middle"))
+    # công cụ
+    c.add(rect(600, 40, 336, 236, fill=PANEL, stroke=CYAN + "55", r=16), t(620, 68, L["tools"], 13.5, CYAN, 700))
+    for i, s in enumerate(L["tool_list"]):
+        c.add(t(624, 100 + i * 30, "› " + s, 13, TEXT, 500, mono=True))
+    c.add(rect(600, 296, 336, 104, fill=GREEN + "10", stroke=GREEN + "55", r=16), t(620, 324, L["done"], 13.5, GREEN, 700))
+    for i, s in enumerate(L["done_b"].split("|")):
+        c.add(t(620, 350 + i * 22, s, 12.5, MUTED, 500))
+    return c.render(W, H, L["title"])
+
+
+def agent_workflow(L):
+    c = Canvas()
+    W, H = 960, 330
+    steps = L["steps"]
+    for i, (a, b, human) in enumerate(steps):
+        x = 24 + i * 156
+        col = AMBER if human else VIOLET
+        c.add(box(x, 60, 136, 92, a, b, col, tag=f"0{i + 1}"))
+        if human:
+            c.add(rect(x + 18, 166, 100, 28, fill=AMBER + "18", stroke=AMBER + "66", r=14),
+                  t(x + 68, 185, L["human"], 12, AMBER, 700, "middle"))
+        if i < len(steps) - 1:
+            c.add(arrow(x + 138, 106, x + 154, 106, MUTED))
+    c.add(f'<path d="M{24 + 3 * 156 + 68},{154} C{24 + 3 * 156 + 68},{260} {24 + 2 * 156 + 68},{260} {24 + 2 * 156 + 68},{158}" fill="none" stroke="{RED}" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#m{RED.lstrip("#")})"/>',
+          t(24 + 2.5 * 156 + 68, 252, L["fail"], 12, RED, 600, "middle"))
+    c.markers.append(("m" + RED.lstrip("#"), RED))
+    c.add(rect(24, 274, 912, 40, fill=PANEL, stroke=LINE, r=10), t(480, 299, L["footer"], 12.5, MUTED, 500, "middle"))
+    return c.render(W, H, L["title"])
+
+
+AGENT_LOOP = {
+    "vi": dict(title="Vòng lặp làm việc của một coding agent", plan="Lên kế hoạch", plan_b="chia nhỏ việc", act="Hành động", act_b="gọi công cụ",
+               observe="Quan sát", observe_b="đọc output, lỗi", verify="Kiểm chứng", verify_b="test, build, ảnh",
+               center="Lặp lại", center_b="đến khi đạt tiêu chí", tools="CÔNG CỤ",
+               tool_list=["read / search files", "edit files", "run: npm test", "run: npm run build", "browser screenshot", "MCP: issues, logs, docs"],
+               done="TIÊU CHÍ HOÀN THÀNH", done_b="Do bạn đặt ra khi giao việc|và agent kiểm chứng được"),
+    "en": dict(title="The working loop of a coding agent", plan="Plan", plan_b="break the task down", act="Act", act_b="call tools",
+               observe="Observe", observe_b="read output, errors", verify="Verify", verify_b="tests, build, UI",
+               center="Repeat", center_b="until criteria are met", tools="TOOLS",
+               tool_list=["read / search files", "edit files", "run: npm test", "run: npm run build", "browser screenshot", "MCP: issues, logs, docs"],
+               done="ACCEPTANCE CRITERIA", done_b="Set by you when handing over the task|and checkable by the agent"),
+}
+AGENT_FLOW = {
+    "vi": dict(title="Quy trình giao việc cho AI agent", human="Người quyết",
+               steps=[("Yêu cầu", "mục tiêu, tiêu chí", True), ("Kế hoạch", "agent đề xuất", True), ("Thực hiện", "nhánh riêng", False),
+                      ("Kiểm chứng", "test · build · CI", False), ("Pull request", "review diff", True), ("Deploy", "merge, phát hành", True)],
+               fail="lỗi → agent sửa tiếp",
+               footer="Agent làm phần lớn việc · Con người giữ các điểm quyết định · Không push thẳng lên main"),
+    "en": dict(title="Handing work to an AI agent", human="Human call",
+               steps=[("Request", "goal, criteria", True), ("Plan", "agent proposes", True), ("Implement", "own branch", False),
+                      ("Verify", "tests · build · CI", False), ("Pull request", "review the diff", True), ("Deploy", "merge, release", True)],
+               fail="failure → agent fixes it",
+               footer="The agent does most of the work · Humans keep the decision points · Never push straight to main"),
+}
+
+
 # ---------------------------------------------------------------- Ảnh bìa (không có chữ)
 
 def cover(kind):
@@ -396,6 +647,9 @@ def cover(kind):
         "idem": (GREEN, CYAN, "#0c2a2a"),
         "aws": (AMBER, PINK, "#2a1a10"),
         "next": (CYAN, VIOLET, "#0e1a33"),
+        "vt": (PINK, CYAN, "#2a1030"),
+        "auth": (VIOLET, GREEN, "#121a38"),
+        "ai": (PINK, VIOLET, "#24103a"),
     }
     a, b, deep = palettes[kind]
     p = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" aria-hidden="true">',
@@ -438,6 +692,36 @@ def cover(kind):
         for i in range(5):
             x = 230 + i * 185
             p.append(f'<rect x="{x}" y="520" width="140" height="18" rx="9" fill="url(#ln)" opacity=".5"/>')
+    elif kind == "vt":
+        # thẻ nhỏ bay thành khung lớn, kèm các vệt chuyển động
+        p.append(f'<rect x="150" y="330" width="220" height="150" rx="18" fill="{PANEL}" stroke="{LINE}" stroke-width="3"/>'
+                 f'<rect x="166" y="346" width="188" height="86" rx="10" fill="{a}" fill-opacity=".6"/>')
+        for i in range(3):
+            o = .18 + i * .2
+            x, y, w, h = 250 + i * 150, 290 - i * 70, 300 + i * 90, 200 + i * 40
+            p.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="22" fill="{a}" fill-opacity="{o * .5}" stroke="url(#ln)" stroke-width="3" stroke-opacity="{o + .2}"/>')
+        p.append(f'<path d="M370,400 C520,380 600,250 700,190" fill="none" stroke="url(#ln)" stroke-width="5" stroke-dasharray="2 14" stroke-linecap="round"/>')
+    elif kind == "auth":
+        # ổ khóa và token
+        p.append(f'<path d="M520,270 v-60 a80,80 0 0,1 160,0 v60" fill="none" stroke="url(#ln)" stroke-width="22" stroke-linecap="round"/>'
+                 f'<rect x="460" y="260" width="280" height="220" rx="36" fill="{PANEL}" stroke="url(#ln)" stroke-width="5"/>'
+                 f'<circle cx="600" cy="350" r="26" fill="{b}"/><rect x="590" y="360" width="20" height="60" rx="10" fill="{b}"/>')
+        for i in range(3):
+            x = 150 + i * 30
+            p.append(f'<rect x="{x}" y="{200 + i * 70}" width="210" height="44" rx="22" fill="{a}" fill-opacity="{.2 + i * .15}" stroke="{a}" stroke-opacity=".7" stroke-width="2"/>')
+        for i in range(4):
+            p.append(f'<circle cx="{850 + i * 60}" cy="{240 + (i % 2) * 120}" r="{14 + i * 3}" fill="{b}" fill-opacity="{.25 + i * .15}"/>')
+    elif kind == "ai":
+        # vòng lặp agent: các nút trên quỹ đạo quanh một lõi
+        cx, cy = 600, 300
+        for r, op in ((230, .25), (165, .4)):
+            p.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="url(#ln)" stroke-width="3" stroke-opacity="{op}" stroke-dasharray="6 12"/>')
+        p.append(f'<circle cx="{cx}" cy="{cy}" r="78" fill="{PANEL}" stroke="url(#ln)" stroke-width="5"/>'
+                 f'<path d="M{cx - 30},{cy - 10} l20,20 l-20,20 M{cx + 4},{cy + 30} h32" fill="none" stroke="{a}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>')
+        for i, ang in enumerate((-90, -10, 70, 160, 230)):
+            r = 230 if i % 2 else 165
+            x = cx + r * math.cos(math.radians(ang)); y = cy + r * math.sin(math.radians(ang))
+            p.append(node(x, y, 22 + (i % 3) * 5, (a, b, CYAN, GREEN, AMBER)[i]))
     else:
         # cửa sổ trình duyệt và đám mây
         p.append(f'<rect x="250" y="120" width="700" height="380" rx="26" fill="{PANEL}" stroke="url(#ln)" stroke-width="4"/>'
@@ -530,12 +814,21 @@ def main():
         ("aws-banking-microservices-architecture", "architecture", aws_arch, AWS),
         ("aws-banking-microservices-architecture", "disaster-recovery", aws_dr, DR),
         ("nextjs-static-cloudflare-pages", "deploy-flow", deploy_flow, DEPLOY),
+        ("view-transitions-api", "lifecycle", vt_lifecycle, VT_LIFE),
+        ("view-transitions-api", "pseudo-tree", vt_tree, VT_TREE),
+        ("view-transitions-api", "morph", vt_morph, VT_MORPH),
+        ("clerk-auth-static-site-cloudflare-worker", "auth-flow", auth_flow, AUTH_FLOW),
+        ("clerk-auth-static-site-cloudflare-worker", "defense", auth_defense, AUTH_DEF),
+        ("ai-coding-agents-workflow", "agent-loop", agent_loop, AGENT_LOOP),
+        ("ai-coding-agents-workflow", "workflow", agent_workflow, AGENT_FLOW),
     ]
     for slug, name, fn, labels in jobs:
         for lang, L in labels.items():
             save(slug, f"{name}-{lang}.svg", fn(L))
     for slug, kind in [("banking-microservices-saga-outbox", "saga"), ("idempotent-payment-api", "idem"),
-                       ("aws-banking-microservices-architecture", "aws"), ("nextjs-static-cloudflare-pages", "next")]:
+                       ("aws-banking-microservices-architecture", "aws"), ("nextjs-static-cloudflare-pages", "next"),
+                       ("view-transitions-api", "vt"), ("clerk-auth-static-site-cloudflare-worker", "auth"),
+                       ("ai-coding-agents-workflow", "ai")]:
         save(slug, "cover.svg", cover(kind))
     print("ok")
 

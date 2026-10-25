@@ -2,6 +2,7 @@ import type { Post } from "../posts";
 
 export const post: Post = {
     slug: "nextjs-static-cloudflare-pages",
+    topic: "cloud",
     date: "2026-10-25",
     cover: "/blog/nextjs-static-cloudflare-pages/cover.svg",
   tags: ["Next.js", "Cloudflare", "DevOps"],

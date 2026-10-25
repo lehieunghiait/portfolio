@@ -89,15 +89,69 @@
 .moreMeta, .postMeta { font-size: .82rem; color: var(--faint); font-weight: 500; }
 
 /* Blog */
-.postList { list-style: none; display: grid; gap: 16px; }
 .postCard { gap: 10px; padding: 28px; }
 .postCard h2 { font-size: 1.35rem; line-height: 1.3; letter-spacing: -.02em; }
 .postCard > p:not(.postMeta) { color: var(--muted); }
-.readMore { font-weight: 600; color: var(--accent); margin-top: 4px; }
-.readMore span, .moreCard strong span { display: inline-block; transition: transform .25s; }
-.postCard:hover .readMore span, .moreCard:hover strong span { transform: translateX(4px); }
+.moreCard strong span { display: inline-block; transition: transform .25s; }
+.moreCard:hover strong span { transform: translateX(4px); }
 
 .prose { font-size: 1.06rem; line-height: 1.8; }
+
+/* Blog theo chủ đề: mục lục dạng viên, mỗi chủ đề một nhóm thẻ 2 cột. Màu chủ đề truyền qua --topic */
+.blogWrap { max-width: 1040px; margin: 0 auto; padding: 56px 0 24px; }
+.blogWrap .header { max-width: 720px; }
+.topicNav { display: flex; flex-wrap: wrap; gap: 10px; margin: -8px 0 8px; animation: rise .7s .08s cubic-bezier(.2, .7, .2, 1) both; }
+.topicPill, .topicBadge {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--topic) 35%, var(--border));
+  background: color-mix(in srgb, var(--topic) 9%, var(--bg-elev));
+  transition: border-color .2s, transform .2s, background .2s;
+}
+.topicPill { padding: 8px 10px 8px 14px; font-size: .92rem; }
+.topicPill:hover, .topicBadge:hover { border-color: var(--topic); transform: translateY(-2px); }
+.topicDot { width: 8px; height: 8px; border-radius: 50%; background: var(--topic); box-shadow: 0 0 10px var(--topic); flex: none; }
+.topicCount {
+  font-size: .78rem; font-weight: 600; color: var(--muted); padding: 2px 8px; border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+.topicSection { margin-top: 56px; }
+.topicHead {
+  display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 4px 16px;
+  padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--border);
+}
+.topicHead h2 { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; letter-spacing: -.02em; }
+.topicHead h2 .topicDot { width: 10px; height: 10px; }
+.topicHead p { grid-column: 1; color: var(--muted); }
+.topicHead .topicCount { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+.postGrid { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.postGrid > li { display: flex; }
+.postGrid .postCard { flex: 1; }
+.postGrid .postCard h3 { font-size: 1.2rem; line-height: 1.35; letter-spacing: -.015em; }
+.postGrid .postCover { aspect-ratio: 2 / 1; }
+.postCard:hover { border-color: color-mix(in srgb, var(--topic, var(--accent)) 55%, var(--border)); }
+.excerpt {
+  color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.postCard .chips { margin-top: auto; padding-top: 6px; }
+/* Chủ đề chỉ có một bài: thẻ trải hết chiều ngang, ảnh bên trái */
+.postGrid > li:only-child { grid-column: 1 / -1; }
+@media (min-width: 721px) {
+  .postGrid > li:only-child .hasCover { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 32px; align-content: center; }
+  .postGrid > li:only-child .hasCover > * { grid-column: 2; }
+  .postGrid > li:only-child .postCover {
+    grid-column: 1; grid-row: 1 / span 4; align-self: stretch;
+    width: calc(100% + 28px); height: calc(100% + 56px); aspect-ratio: auto;
+    margin: -28px 0 -28px -28px; border-bottom: 0; border-right: 1px solid var(--border);
+  }
+  .postGrid > li:only-child h3 { font-size: 1.45rem; }
+}
+.postMeta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.topicBadge { padding: 4px 12px 4px 10px; font-size: .8rem; color: var(--text); margin-right: 6px; }
+.related { max-width: 1040px; margin: 40px auto 0; padding: 40px 0 24px; border-top: 1px solid var(--border); }
+.relatedHead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; margin-bottom: 20px; }
+.relatedHead h2 { font-size: 1.35rem; letter-spacing: -.02em; }
+.relatedHead a { font-weight: 600; font-size: .92rem; color: var(--topic); }
+.relatedHead a:hover { text-decoration: underline; }
 
 /* Ảnh bìa bài viết: dải ảnh trên đầu thẻ ở danh sách, khung lớn dưới tiêu đề ở trang bài */
 .hasCover { overflow: hidden; }
@@ -144,6 +198,11 @@
   .factWide, .factAction { grid-column: 1 / -1; }
   .factAction { justify-self: start; }
   .postCard { padding: 22px 20px; }
+  .blogWrap { padding-top: 36px; }
+  .postGrid { grid-template-columns: 1fr; }
+  .topicSection { margin-top: 44px; }
+  .topicHead { grid-template-columns: 1fr; }
+  .topicHead .topicCount { display: none; }
   .postCover { width: calc(100% + 40px); margin: -22px -20px 8px; }
   .heroCover { margin-bottom: 28px; border-radius: 16px; }
   /* Sơ đồ giữ bề ngang đọc được, cuộn ngang trong khung */

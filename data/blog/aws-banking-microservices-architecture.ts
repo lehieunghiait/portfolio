@@ -2,6 +2,7 @@ import type { Post } from "../posts";
 
 export const post: Post = {
   slug: "aws-banking-microservices-architecture",
+    topic: "cloud",
   date: "2026-10-25",
   cover: "/blog/aws-banking-microservices-architecture/cover.svg",
   tags: ["AWS", "Architecture", "Security", "Banking"],

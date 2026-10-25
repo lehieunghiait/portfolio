@@ -68,6 +68,9 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+/* .page: phần tử gốc duy nhất của mỗi trang. Next đo phần tử này để cuộn về đầu trang khi chuyển trang;
+   nếu trang bắt đầu bằng các lớp position: fixed (thanh tiến trình, nền), Next đo sai và cuộn lệch xuống giữa/cuối bài */
+.page { display: block; }
 
 html, body { overflow-x: clip; }
 

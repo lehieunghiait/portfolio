@@ -13,8 +13,9 @@ export function langFromPath(path: string): Lang {
 // lúc build tĩnh mỗi trang vẫn có lang đúng trong HTML, khi chuyển trang phía client thì lang tự cập nhật.
 export function LangHtml({ className, children }: { className: string; children: React.ReactNode }) {
   const lang = langFromPath(usePathname());
+  // data-scroll-behavior="smooth": Next tạm tắt cuộn mượt khi chuyển trang để về đầu trang ngay
   return (
-    <html lang={lang} className={className} data-theme="dark" suppressHydrationWarning>
+    <html lang={lang} className={className} data-theme="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       {children}
     </html>
   );

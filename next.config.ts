@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   output: "export",
   images: { unoptimized: true },
   turbopack: { root: __dirname },
-  // Trang 404 chung khi có nhiều root layout (tiếng Việt và tiếng Anh)
+  // Trang 404 chung (app/global-not-found.tsx) cho mọi đường dẫn không tồn tại
   experimental: { globalNotFound: true },
 };
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getProfile, type Lang } from "@/data/profile";
 import { cvPdf, paths, ui } from "@/data/i18n";
 import { ThemeToggle } from "../components/theme-toggle";
@@ -20,7 +21,7 @@ export function Cv({ lang }: { lang: Lang }) {
   return (
     <main className="cv-root">
       <div className="cv-toolbar no-print">
-        <a href={paths[lang].home} className="cv-back">{t.cv.back}</a>
+        <Link href={paths[lang].home} className="cv-back">{t.cv.back}</Link>
         <div className="cv-tools">
           <LangSwitch lang={lang} hrefs={{ vi: paths.vi.cv, en: paths.en.cv }} />
           <ThemeToggle labels={t.theme} />

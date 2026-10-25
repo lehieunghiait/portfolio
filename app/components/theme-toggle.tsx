@@ -29,7 +29,13 @@ export function ThemeToggle({ labels, className }: { labels: { toLight: string; 
     const x = e.clientX || window.innerWidth - 40;
     const y = e.clientY || 34;
     const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    document.startViewTransition(apply).ready.then(() => {
+    // Lớp theme-vt: chỉ trong lúc đổi giao diện mới tắt hiệu ứng mặc định và bỏ tên chuyển cảnh của các phần tử,
+    // để cả trang được chụp chung một lớp root (hiệu ứng chuyển trang vẫn dùng tên riêng)
+    const root = document.documentElement;
+    root.classList.add("theme-vt");
+    const vt = document.startViewTransition(apply);
+    vt.finished.finally(() => root.classList.remove("theme-vt"));
+    vt.ready.then(() => {
       document.documentElement.animate(
         { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
         { duration: 650, easing: "cubic-bezier(.4, 0, .2, 1)", pseudoElement: "::view-transition-new(root)" },

@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ViewTransition } from "react";
 import { getProfile, type Lang } from "@/data/profile";
 import { homeSection, projectPath, ui } from "@/data/i18n";
 import { SiteFooter, SiteHeader } from "./site-header";
@@ -17,11 +19,11 @@ export function ProjectDetail({ lang, slug }: { lang: Lang; slug: string }) {
       <SiteHeader lang={lang} hrefs={{ vi: projectPath("vi", slug), en: projectPath("en", slug) }} />
       <main id="top" className={d.main}>
         <article className={d.article}>
-          <a href={homeSection(lang, "projects")} className={d.back}>{t.project.back}</a>
+          <Link href={homeSection(lang, "projects")} className={d.back}>{t.project.back}</Link>
 
           <header className={d.header}>
             <p className={d.eyebrow}>{p.year} · {p.role}</p>
-            <h1 className={d.title}>{p.name}</h1>
+            <ViewTransition name={`ptitle-${p.slug}`} share="morph" default="none"><h1 className={d.title}>{p.name}</h1></ViewTransition>
             <p className={d.lead}>{p.description}</p>
           </header>
 
@@ -42,7 +44,9 @@ export function ProjectDetail({ lang, slug }: { lang: Lang; slug: string }) {
           {p.image && (
             <figure className={d.shot} data-tilt>
               <div className={d.browserBar} aria-hidden="true"><span /><span /><span /></div>
-              <SmartImg placeholder src={p.image} alt={t.project.screenshotAlt(p.name)} width={1280} height={800} />
+              <ViewTransition name={`shot-${p.slug}`} share="morph" default="none">
+                <SmartImg placeholder src={p.image} alt={t.project.screenshotAlt(p.name)} width={1280} height={800} />
+              </ViewTransition>
             </figure>
           )}
 
@@ -64,11 +68,11 @@ export function ProjectDetail({ lang, slug }: { lang: Lang; slug: string }) {
               <h2>{t.project.more}</h2>
               <div className={d.moreGrid}>
                 {others.map((o) => (
-                  <a key={o.slug} href={projectPath(lang, o.slug)} className={d.moreCard} data-spotlight>
+                  <Link key={o.slug} href={projectPath(lang, o.slug)} className={d.moreCard} data-spotlight>
                     <span className={d.moreMeta}>{o.year} · {o.role}</span>
                     <strong>{o.name} <span aria-hidden>→</span></strong>
                     <span>{o.description}</span>
-                  </a>
+                  </Link>
                 ))}
               </div>
             </nav>

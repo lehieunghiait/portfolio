@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { getProfile, type Lang } from "@/data/profile";
 import { homeSection, paths, ui } from "@/data/i18n";
 import s from "./portfolio.module.css";
 import { Spotlight } from "../components/spotlight";
 import { ThemeToggle } from "../components/theme-toggle";
 import { LangSwitch } from "../components/lang-switch";
+import { MobileMenu } from "../components/mobile-menu";
 
 // Nền động, thanh tiến trình cuộn và thanh menu dùng chung cho trang chủ, trang dự án và blog.
 // `onHome`: trên trang chủ các liên kết menu cuộn trong trang (#about), ở trang khác thì quay về trang chủ.
@@ -33,16 +35,17 @@ export function SiteHeader({ lang, hrefs, onHome = false }: { lang: Lang; hrefs:
 
       <nav className={s.nav}>
         <div className={s.navInner}>
-          <a href={onHome ? "#top" : paths[lang].home} className={s.logo}>
+          <Link href={onHome ? "#top" : paths[lang].home} className={s.logo}>
             <span className={s.logoMark}>{initials}</span>
             <span className={s.logoText}>{profile.name}</span>
-          </a>
+          </Link>
           <ul className={s.navLinks}>
-            {nav.map((n) => <li key={n.href}><a href={n.href}>{n.label}</a></li>)}
+            {nav.map((n) => <li key={n.href}><Link href={n.href}>{n.label}</Link></li>)}
           </ul>
           <LangSwitch lang={lang} hrefs={hrefs} />
           <ThemeToggle labels={t.theme} />
-          <a href={paths[lang].cv} className={s.navCta}>{t.viewCv}</a>
+          <Link href={paths[lang].cv} className={s.navCta}>{t.viewCv}</Link>
+          <MobileMenu items={nav} cta={{ href: paths[lang].cv, label: t.viewCv }} labels={t.menu} />
         </div>
       </nav>
     </>

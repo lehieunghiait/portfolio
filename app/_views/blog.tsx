@@ -1,4 +1,6 @@
 import type { Lang } from "@/data/profile";
+import Link from "next/link";
+import { ViewTransition } from "react";
 import { paths, postPath, ui } from "@/data/i18n";
 import { getPost, posts, type Block } from "@/data/posts";
 import { SiteFooter, SiteHeader } from "./site-header";
@@ -31,15 +33,15 @@ export function BlogIndex({ lang }: { lang: Lang }) {
               const c = post.content[lang];
               return (
                 <li key={post.slug}>
-                  <a href={postPath(lang, post.slug)} className={d.postCard} data-spotlight>
+                  <Link href={postPath(lang, post.slug)} className={d.postCard} data-spotlight>
                     <p className={d.postMeta}>
                       <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
                     </p>
-                    <h2>{c.title}</h2>
+                    <ViewTransition name={`post-${post.slug}`} share="morph" default="none"><h2>{c.title}</h2></ViewTransition>
                     <p>{c.excerpt}</p>
                     <ul className={d.chips}>{post.tags.map((x) => <li key={x}>{x}</li>)}</ul>
                     <span className={d.readMore}>{t.blog.readMore} <span aria-hidden>→</span></span>
-                  </a>
+                  </Link>
                 </li>
               );
             })}
@@ -75,12 +77,12 @@ export function BlogPost({ lang, slug }: { lang: Lang; slug: string }) {
       <SiteHeader lang={lang} hrefs={{ vi: postPath("vi", slug), en: postPath("en", slug) }} />
       <main id="top" className={d.main}>
         <article className={d.article}>
-          <a href={paths[lang].blog} className={d.back}>{t.blog.back}</a>
+          <Link href={paths[lang].blog} className={d.back}>{t.blog.back}</Link>
           <header className={d.header}>
             <p className={d.postMeta}>
               <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
             </p>
-            <h1 className={d.title}>{c.title}</h1>
+            <ViewTransition name={`post-${post.slug}`} share="morph" default="none"><h1 className={d.title}>{c.title}</h1></ViewTransition>
             <p className={d.lead}>{c.excerpt}</p>
             <ul className={d.chips}>{post.tags.map((x) => <li key={x}>{x}</li>)}</ul>
           </header>

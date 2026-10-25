@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ViewTransition } from "react";
 import { getProfile, type Lang } from "@/data/profile";
 import { cvPdf, paths, projectPath, ui } from "@/data/i18n";
 import { contactEndpoint, turnstileSiteKey } from "@/data/site";
@@ -178,24 +180,29 @@ export function Portfolio({ lang }: { lang: Lang }) {
           <SectionHead index="03" eyebrow={t.nav.projects} title={t.projectsTitle} />
           <div className={s.projects}>
             {profile.projects.map((p, i) => (
-              <a key={p.slug} href={projectPath(lang, p.slug)} className={s.project} data-spotlight>
+              <Link key={p.slug} href={projectPath(lang, p.slug)} className={`${s.project} ${i === 0 ? s.featured : ""}`} data-spotlight>
                 <div className={s.cover} style={{ background: covers[i % covers.length] }}>
                   {p.image ? (
-                    <SmartImg fade className={s.coverShot} src={p.image} alt="" width={1280} height={800} loading="lazy" />
+                    <ViewTransition name={`shot-${p.slug}`} share="morph" default="none">
+                      <SmartImg fade className={s.coverShot} src={p.image} alt="" width={1280} height={800} loading="lazy" />
+                    </ViewTransition>
                   ) : (
                     <span>{p.name.split(" ").map((w) => w[0]).join("").slice(0, 3)}</span>
                   )}
                 </div>
                 <div className={s.projectBody}>
-                  <p className={s.projectMeta}>{p.year} · {p.role}</p>
-                  <h3>{p.name}</h3>
+                  <p className={s.projectMeta}>
+                    {i === 0 && <span className={s.featuredBadge}>★ {t.featured}</span>}
+                    {p.year} · {p.role}
+                  </p>
+                  <ViewTransition name={`ptitle-${p.slug}`} share="morph" default="none"><h3>{p.name}</h3></ViewTransition>
                   <p>{p.description}</p>
                   <ul className={s.chips}>
                     {p.tech.map((tech) => <li key={tech}>{tech}</li>)}
                   </ul>
                   <span className={s.projectMore}>{t.viewProject} <span className={s.arrow} aria-hidden>→</span></span>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </section>

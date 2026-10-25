@@ -30,6 +30,7 @@ export const ui = {
     experienceTitle: "Kinh nghiệm làm việc",
     projectsTitle: "Dự án tiêu biểu",
     viewProject: "Xem chi tiết",
+    featured: "Nổi bật",
     techStack: "Công nghệ sử dụng",
     contactTitle: ["Hãy cùng trao đổi về", "dự án tiếp theo", "của bạn."],
     contactLead: "Tôi luôn sẵn sàng trao đổi về cơ hội việc làm, hợp tác dự án hoặc tư vấn giải pháp kỹ thuật.",
@@ -38,6 +39,7 @@ export const ui = {
     backToTop: "Lên đầu trang ↑",
     theme: { toLight: "Chuyển sang giao diện sáng", toDark: "Chuyển sang giao diện tối" },
     language: "Ngôn ngữ",
+    menu: { open: "Mở menu", close: "Đóng menu" },
     form: {
       name: "Họ và tên",
       email: "Email",
@@ -97,6 +99,7 @@ export const ui = {
     experienceTitle: "Professional experience",
     projectsTitle: "Selected projects",
     viewProject: "View case study",
+    featured: "Featured",
     techStack: "Tech stack",
     contactTitle: ["Let's discuss", "your next project", "together."],
     contactLead: "I'm open to job opportunities, project collaborations and technical consulting.",
@@ -105,6 +108,7 @@ export const ui = {
     backToTop: "Back to top ↑",
     theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme" },
     language: "Language",
+    menu: { open: "Open menu", close: "Close menu" },
     form: {
       name: "Full name",
       email: "Email",

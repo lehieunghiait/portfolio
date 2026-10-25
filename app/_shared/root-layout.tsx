@@ -3,6 +3,7 @@ import { Be_Vietnam_Pro } from "next/font/google";
 import { getProfile, type Lang } from "@/data/profile";
 import { paths } from "@/data/i18n";
 import "../globals.css";
+import { LangHtml } from "./lang-html";
 
 const font = Be_Vietnam_Pro({
   variable: "--font-sans",
@@ -13,15 +14,15 @@ const font = Be_Vietnam_Pro({
 // Giao diện tối là mặc định; nếu người xem đã chọn giao diện khác thì áp dụng trước khi trang hiển thị
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}})();`;
 
-// Dùng chung cho hai root layout (tiếng Việt và tiếng Anh), chỉ khác thuộc tính lang
-export function RootShell({ lang, children }: { lang: Lang; children: React.ReactNode }) {
+// Root layout duy nhất (app/layout.tsx) dùng chung cho cả hai ngôn ngữ, nên chuyển ngôn ngữ là chuyển trang phía client
+export function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={lang} className={font.variable} data-theme="dark" suppressHydrationWarning>
+    <LangHtml className={font.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>{children}</body>
-    </html>
+    </LangHtml>
   );
 }
 

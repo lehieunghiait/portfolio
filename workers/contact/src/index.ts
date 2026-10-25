@@ -117,19 +117,26 @@ async function requireAdmin(request: Request, env: Env, headers: Record<string, 
   const token = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "");
   if (!token) return json(401, { error: "unauthenticated" }, headers);
 
-  const { data, errors } = await verifyToken(token, {
-    secretKey: env.CLERK_SECRET_KEY,
-    authorizedParties: allowedOrigins(env),
-  });
-  if (errors || !data?.sub) return json(401, { error: "invalid_token" }, headers);
+  let userId: string;
+  try {
+    const { data, errors } = await verifyToken(token, {
+      secretKey: env.CLERK_SECRET_KEY,
+      authorizedParties: allowedOrigins(env),
+    });
+    if (errors || !data?.sub) return json(401, { error: "invalid_token" }, headers);
+    userId = data.sub;
+  } catch {
+    // Token sai định dạng có thể làm thư viện ném lỗi thay vì trả `errors`
+    return json(401, { error: "invalid_token" }, headers);
+  }
 
   // Vai trò lấy từ public_metadata của người dùng (chỉ đặt được từ phía máy chủ / dashboard Clerk)
   const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY });
-  const user = await clerk.users.getUser(data.sub);
+  const user = await clerk.users.getUser(userId);
   if ((user.publicMetadata as { role?: string } | undefined)?.role !== "admin") {
     return json(403, { error: "forbidden" }, headers);
   }
-  return data.sub;
+  return userId;
 }
 
 async function handleAdmin(request: Request, env: Env, headers: Record<string, string>, path: string) {

@@ -3,10 +3,10 @@
 // Trang quản trị /admin: đăng nhập bằng Clerk, xem / đánh dấu / xóa tin nhắn từ form liên hệ (lưu ở D1).
 // Giao diện chỉ ẩn/hiện theo vai trò cho tiện; quyền thật sự được Worker kiểm tra ở mỗi request.
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ClerkLoaded, ClerkLoading, ClerkProvider, Show, SignIn, UserButton, useAuth, useUser } from "@clerk/react";
-import { viVN } from "@clerk/localizations";
+import { ClerkLoaded, ClerkLoading, ClerkProvider, Show, SignIn, useAuth, useUser } from "@clerk/react";
 import { clerkPublishableKey, contactEndpoint } from "@/data/site";
 import { ThemeToggle } from "../components/theme-toggle";
+import { UserChip, clerkAppearance, clerkLocalization } from "../components/auth-status";
 import s from "./admin.module.css";
 
 type Message = {
@@ -17,22 +17,6 @@ type Message = {
   lang: string;
   created_at: string;
   read_at: string | null;
-};
-
-// Màu của Clerk lấy theo token của trang nên tự đổi theo giao diện sáng / tối
-const appearance = {
-  variables: {
-    colorPrimary: "var(--accent)",
-    colorBackground: "var(--bg-elev)",
-    colorForeground: "var(--text)",
-    colorMutedForeground: "var(--muted)",
-    colorInput: "var(--bg)",
-    colorInputForeground: "var(--text)",
-    colorNeutral: "var(--text)",
-    colorBorder: "var(--border)",
-    fontFamily: "var(--font-sans)",
-    borderRadius: "12px",
-  },
 };
 
 const formatDate = (d: string) =>
@@ -50,8 +34,8 @@ export function AdminApp() {
     );
   }
   return (
-    <ClerkProvider publishableKey={clerkPublishableKey} appearance={appearance} localization={viVN} afterSignOutUrl="/admin">
-      <Shell account={<Show when="signed-in"><UserButton /></Show>}>
+    <ClerkProvider publishableKey={clerkPublishableKey} appearance={clerkAppearance} localization={clerkLocalization.vi} afterSignOutUrl="/admin">
+      <Shell account={<Show when="signed-in"><UserChip labels={{ signIn: "Đăng nhập", admin: "Quản trị" }} /></Show>}>
         <ClerkLoading><p className={s.center}>Đang tải…</p></ClerkLoading>
         <ClerkLoaded>
           <Show when="signed-out">

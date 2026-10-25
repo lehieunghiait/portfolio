@@ -4,6 +4,7 @@ import s from "./portfolio.module.css";
 import { Spotlight } from "../components/spotlight";
 import { ThemeToggle } from "../components/theme-toggle";
 import { LangSwitch } from "../components/lang-switch";
+import { AuthStatus } from "../components/auth-status";
 
 // Nền động, thanh tiến trình cuộn và thanh menu dùng chung cho trang chủ, trang dự án và blog.
 // `onHome`: trên trang chủ các liên kết menu cuộn trong trang (#about), ở trang khác thì quay về trang chủ.
@@ -43,6 +44,7 @@ export function SiteHeader({ lang, hrefs, onHome = false }: { lang: Lang; hrefs:
           <LangSwitch lang={lang} hrefs={hrefs} />
           <ThemeToggle labels={t.theme} />
           <a href={paths[lang].cv} className={s.navCta}>{t.viewCv}</a>
+          <AuthStatus lang={lang} labels={t.auth} />
         </div>
       </nav>
     </>

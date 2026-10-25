@@ -8,4 +8,4 @@ export const turnstileSiteKey = "0x4AAAAAAFkwL2AEKjMr6Gfw";
 
 // Clerk (đăng nhập trang /admin): khóa công khai (publishable key), an toàn để đặt phía trình duyệt.
 // Khóa bí mật CLERK_SECRET_KEY chỉ nằm ở Worker (wrangler secret).
-export const clerkPublishableKey = "";
+export const clerkPublishableKey = "pk_test_dGVuZGVyLWFuZW1vbmUtNDg3OC5jbGVyay5hY2NvdW50cy5kZXYk";

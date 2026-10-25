@@ -34,9 +34,9 @@ export function pageMetadata(
   { hrefs: Record<Lang, string>; title?: string; description?: string; type?: "profile" | "article" | "website" },
 ): Metadata {
   const profile = getProfile(lang);
-  const name = `${profile.name} — ${profile.title}`;
+  const name = `${profile.name} (${profile.brand}) — ${profile.title}`;
   const fullTitle = title ? `${title} | ${profile.name}` : name;
-  const desc = description ?? profile.summary;
+  const desc = description ?? profile.seoDescription;
   return {
     metadataBase: new URL(profile.website),
     title: fullTitle,
@@ -57,4 +57,50 @@ export function pageMetadata(
     },
     twitter: { card: "summary_large_image", title: fullTitle, description: desc },
   };
+}
+
+// Dữ liệu cấu trúc (schema.org) cho trang chủ: giúp Google nhận ra trang này là của ai,
+// kể cả khi tìm bằng tên gọi khác hoặc không dấu
+export function PersonJsonLd({ lang }: { lang: Lang }) {
+  const profile = getProfile(lang);
+  const url = new URL(paths[lang].home, profile.website).href;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": `${profile.website}/#person`,
+        name: profile.name,
+        alternateName: profile.alternateNames,
+        jobTitle: profile.title,
+        description: profile.seoDescription,
+        url: profile.website,
+        image: new URL(profile.photo, profile.website).href,
+        email: `mailto:${profile.email}`,
+        sameAs: profile.links.map((l) => l.url),
+        knowsAbout: profile.skills.flatMap((g) => g.items),
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${profile.website}/#website`,
+        url: profile.website,
+        name: profile.brand,
+        alternateName: [profile.name, ...profile.alternateNames],
+        inLanguage: ["en", "vi"],
+        publisher: { "@id": `${profile.website}/#person` },
+      },
+      {
+        "@type": "ProfilePage",
+        url,
+        inLanguage: lang,
+        mainEntity: { "@id": `${profile.website}/#person` },
+      },
+    ],
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+    />
+  );
 }

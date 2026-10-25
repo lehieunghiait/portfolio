@@ -57,7 +57,7 @@ export function SiteFooter({ lang }: { lang: Lang }) {
   const t = ui[lang];
   return (
     <footer className={s.footer}>
-      <p>© {new Date().getFullYear()} {profile.name}. {t.footer}</p>
+      <p>© {new Date().getFullYear()} {profile.name} · {profile.brand}. {t.footer}</p>
       <a href="#top">{t.backToTop}</a>
     </footer>
   );

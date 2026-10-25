@@ -43,6 +43,8 @@ type Content = {
   tagline: string;
   taglineWords: string[];
   summary: string;
+  // Mô tả ngắn (~160 ký tự) cho thẻ meta description của trang chủ
+  seoDescription: string;
   location: string;
   stats: { value: string; label: string }[];
   skills: { group: string; items: string[] }[];
@@ -65,10 +67,14 @@ const shared = {
   // Để trống ("") thì số điện thoại sẽ không hiển thị
   phone: "",
   website: "https://hieunghiagroup.online",
-  // Thêm link thật của bạn, ví dụ:
-  // { label: "GitHub", url: "https://github.com/ten-cua-ban" },
-  // { label: "LinkedIn", url: "https://www.linkedin.com/in/ten-cua-ban" },
-  links: [] as { label: string; url: string }[],
+  // Tên gọi khác để công cụ tìm kiếm nhận ra (JSON-LD alternateName), gồm cả bản không dấu
+  alternateNames: ["Hiếu Nghĩa", "Hiếu Nghĩa Software", "Le Hieu Nghia", "Hieu Nghia", "Hieu Nghia Software"],
+  // Brand hiển thị ở tiêu đề và chân trang
+  brand: "Hiếu Nghĩa Software",
+  links: [
+    { label: "GitHub", url: "https://github.com/lehieunghiait" },
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/lehieunghia/" },
+  ] as { label: string; url: string }[],
 };
 
 const content: Record<Lang, Content> = {
@@ -78,6 +84,8 @@ const content: Record<Lang, Content> = {
     taglineWords: ["hiệu năng cao.", "dễ mở rộng.", "tinh gọn.", "bền vững."],
     summary:
       "Kỹ sư phần mềm full-stack, chuyên về TypeScript, React/Next.js và Node.js. Tôi tham gia trọn vòng đời sản phẩm — từ phân tích yêu cầu, thiết kế giải pháp đến triển khai và vận hành — với ưu tiên là mã nguồn rõ ràng, hiệu năng ổn định và trải nghiệm người dùng nhất quán.",
+    seoDescription:
+      "Lê Hiếu Nghĩa (Hiếu Nghĩa Software) — kỹ sư phần mềm full-stack: TypeScript, React/Next.js, Node.js. Portfolio, CV và blog kỹ thuật.",
     location: "Việt Nam",
     stats: [
       { value: "3+", label: "Năm kinh nghiệm" },
@@ -205,6 +213,8 @@ const content: Record<Lang, Content> = {
     ],
     summary:
       "Full-stack software engineer specializing in TypeScript, React/Next.js and Node.js. I work across the entire product lifecycle — from requirements and solution design to deployment and operations — with a focus on clean code, reliable performance and consistent user experiences.",
+    seoDescription:
+      "Lê Hiếu Nghĩa (Hiếu Nghĩa Software) — full-stack software engineer: TypeScript, React/Next.js, Node.js. Portfolio, CV and technical blog.",
     location: "Vietnam",
     stats: [
       { value: "3+", label: "Years of experience" },

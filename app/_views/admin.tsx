@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ClerkLoaded, ClerkLoading, ClerkProvider, Show, SignIn, useAuth, useUser } from "@clerk/react";
 import { clerkPublishableKey, contactEndpoint } from "@/data/site";
 import { ThemeToggle } from "../components/theme-toggle";
-import { UserChip, clerkAppearance, clerkLocalization } from "../components/auth-status";
+import { UserChip, clerkAppearance, clerkLocalization } from "../components/clerk";
 import s from "./admin.module.css";
 
 type Message = {
@@ -35,7 +35,7 @@ export function AdminApp() {
   }
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} appearance={clerkAppearance} localization={clerkLocalization.vi} afterSignOutUrl="/admin">
-      <Shell account={<Show when="signed-in"><UserChip labels={{ signIn: "Đăng nhập", admin: "Quản trị" }} /></Show>}>
+      <Shell account={<Show when="signed-in"><UserChip adminLabel="Quản trị" /></Show>}>
         <ClerkLoading><SignInSkeleton /></ClerkLoading>
         <ClerkLoaded>
           <Show when="signed-out">

@@ -38,7 +38,6 @@ export const ui = {
     backToTop: "Lên đầu trang ↑",
     theme: { toLight: "Chuyển sang giao diện sáng", toDark: "Chuyển sang giao diện tối" },
     language: "Ngôn ngữ",
-    auth: { signIn: "Đăng nhập", admin: "Quản trị" },
     form: {
       name: "Họ và tên",
       email: "Email",
@@ -106,7 +105,6 @@ export const ui = {
     backToTop: "Back to top ↑",
     theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme" },
     language: "Language",
-    auth: { signIn: "Sign in", admin: "Admin" },
     form: {
       name: "Full name",
       email: "Email",

@@ -182,21 +182,13 @@ ul, ol { list-style: none; }
 .contact-form .cf-error, .contact-form .cf-captcha { color: #e5484d; }
 @media (max-width: 600px) { .contact-form .cf-row { grid-template-columns: 1fr; } }
 
-/* Trạng thái đăng nhập trên thanh menu (components/auth-status.tsx) */
-.auth-signin {
-  padding: 8px 16px; border-radius: 999px; font-size: .9rem; font-weight: 600; color: #fff;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 6px 18px -8px var(--accent); transition: transform .2s, box-shadow .2s;
-}
-.auth-signin:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px var(--accent); }
+/* Khối tài khoản trên thanh menu trang /admin (components/clerk.tsx) */
 .auth-user {
   display: inline-flex; align-items: center; gap: 10px; padding: 3px 3px 3px 14px;
   border-radius: 999px; border: 1px solid var(--border); background: var(--bg-elev);
 }
 .auth-name { font-size: .88rem; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .auth-user .cl-userButtonTrigger { display: flex; }
-.auth-skeleton { width: 34px; height: 34px; border-radius: 50%; background: var(--border); animation: auth-pulse 1.2s ease-in-out infinite; }
-@keyframes auth-pulse { 50% { opacity: .45; } }
 @media (max-width: 720px) {
   .auth-name { display: none; }
   .auth-user { padding: 3px; }

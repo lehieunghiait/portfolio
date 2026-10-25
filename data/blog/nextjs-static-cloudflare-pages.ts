@@ -3,7 +3,8 @@ import type { Post } from "../posts";
 export const post: Post = {
     slug: "nextjs-static-cloudflare-pages",
     date: "2026-10-25",
-    tags: ["Next.js", "Cloudflare", "DevOps"],
+    cover: "/blog/nextjs-static-cloudflare-pages/cover.svg",
+  tags: ["Next.js", "Cloudflare", "DevOps"],
     content: {
       vi: {
         title: "Đưa website Next.js tĩnh lên Cloudflare Pages: những lỗi thường gặp",
@@ -14,7 +15,13 @@ export const post: Post = {
             type: "p",
             text: "Cloudflare Pages là lựa chọn rất hợp cho một website tĩnh: miễn phí, có CDN toàn cầu và HTTPS tự động. Tuy vậy, có vài điểm dễ vướng khi lần đầu gắn tên miền riêng. Dưới đây là những lỗi tôi đã gặp khi triển khai chính trang portfolio này và cách xử lý.",
           },
-          { type: "h2", text: "1. Bật chế độ xuất file tĩnh" },
+          {
+          type: "figure",
+          src: "/blog/nextjs-static-cloudflare-pages/deploy-flow-vi.svg",
+          alt: "Sơ đồ 5 bước: next build, thư mục out, wrangler tải lên, Cloudflare Pages, tên miền; kèm các lỗi thường gặp ở từng bước",
+          caption: "Toàn bộ quy trình và chỗ hay gặp lỗi.",
+        },
+        { type: "h2", text: "1. Bật chế độ xuất file tĩnh" },
           {
             type: "p",
             text: "Với trang không cần máy chủ, cấu hình Next.js xuất toàn bộ thành HTML/CSS/JS trong thư mục out/. Lưu ý một số tính năng như Partial Prerendering không dùng được ở chế độ này và sẽ làm lệnh build báo lỗi.",
@@ -83,7 +90,13 @@ const nextConfig = {
             type: "p",
             text: "Cloudflare Pages is a great fit for a static website: free, globally cached and HTTPS out of the box. Still, a few things are easy to trip over the first time you attach a custom domain. Here are the issues I ran into while deploying this very portfolio, and how I fixed them.",
           },
-          { type: "h2", text: "1. Enable static export" },
+          {
+          type: "figure",
+          src: "/blog/nextjs-static-cloudflare-pages/deploy-flow-en.svg",
+          alt: "Five-step diagram: next build, the out folder, wrangler upload, Cloudflare Pages, custom domain; with common pitfalls at each step",
+          caption: "The whole pipeline and where things usually go wrong.",
+        },
+        { type: "h2", text: "1. Enable static export" },
           {
             type: "p",
             text: "For a site that needs no server, configure Next.js to export everything as HTML/CSS/JS into the out/ folder. Note that some features, such as Partial Prerendering, are not supported in this mode and will make the build fail.",

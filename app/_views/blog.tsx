@@ -5,11 +5,12 @@ import { paths, postPath, ui } from "@/data/i18n";
 import { getPost, posts, type Block } from "@/data/posts";
 import { SiteFooter, SiteHeader } from "./site-header";
 import d from "./detail.module.css";
+import { SmartImg } from "../components/smart-img";
 
 // Ước tính thời gian đọc (~200 từ/phút)
 function readingMinutes(blocks: Block[]) {
   const words = blocks
-    .map((b) => (b.type === "ul" ? b.items.join(" ") : b.type === "code" ? b.code : b.text))
+    .map((b) => (b.type === "ul" ? b.items.join(" ") : b.type === "code" ? b.code : b.type === "figure" ? (b.caption ?? "") : b.text))
     .join(" ")
     .split(/\s+/).length;
   return Math.max(1, Math.round(words / 200));
@@ -33,7 +34,12 @@ export function BlogIndex({ lang }: { lang: Lang }) {
               const c = post.content[lang];
               return (
                 <li key={post.slug}>
-                  <Link href={postPath(lang, post.slug)} className={d.postCard} data-spotlight>
+                  <Link href={postPath(lang, post.slug)} className={`${d.postCard} ${post.cover ? d.hasCover : ""}`} data-spotlight>
+                    {post.cover && (
+                      <ViewTransition name={`cover-${post.slug}`} share="morph" default="none">
+                        <SmartImg fade className={d.postCover} src={post.cover} alt="" width={1200} height={600} loading="lazy" />
+                      </ViewTransition>
+                    )}
                     <p className={d.postMeta}>
                       <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
                     </p>
@@ -59,6 +65,16 @@ function BlockView({ block }: { block: Block }) {
     case "p": return <p>{block.text}</p>;
     case "ul": return <ul className={d.list}>{block.items.map((x) => <li key={x}>{x}</li>)}</ul>;
     case "note": return <aside className={d.note}>{block.text}</aside>;
+    case "figure":
+      // Bấm để mở ảnh gốc; trên màn hình hẹp sơ đồ giữ kích thước đọc được và cuộn ngang
+      return (
+        <figure className={d.figure}>
+          <a href={block.src} target="_blank" rel="noreferrer" className={d.figureScroll} aria-label={block.alt}>
+            <SmartImg placeholder src={block.src} alt={block.alt} loading="lazy" />
+          </a>
+          {block.caption && <figcaption>{block.caption}</figcaption>}
+        </figure>
+      );
     case "code":
       return (
         <pre className={d.code} data-lang={block.lang}>
@@ -86,6 +102,11 @@ export function BlogPost({ lang, slug }: { lang: Lang; slug: string }) {
             <p className={d.lead}>{c.excerpt}</p>
             <ul className={d.chips}>{post.tags.map((x) => <li key={x}>{x}</li>)}</ul>
           </header>
+          {post.cover && (
+            <ViewTransition name={`cover-${post.slug}`} share="morph" default="none">
+              <SmartImg placeholder className={d.heroCover} src={post.cover} alt="" width={1200} height={600} />
+            </ViewTransition>
+          )}
           <div className={d.prose}>
             {c.body.map((b, i) => <BlockView key={i} block={b} />)}
           </div>

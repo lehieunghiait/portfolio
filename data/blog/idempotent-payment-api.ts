@@ -3,6 +3,7 @@ import type { Post } from "../posts";
 export const post: Post = {
   slug: "idempotent-payment-api",
   date: "2026-10-25",
+  cover: "/blog/idempotent-payment-api/cover.svg",
   tags: ["API Design", "Banking", "Node.js", "Resilience"],
   content: {
     vi: {
@@ -27,6 +28,12 @@ Idempotency-Key: 7f3c2a9e-1b4d-4c8e-9a51-2f0d6b7e8c13
 Content-Type: application/json
 
 { "from": "0123456789", "to": "9876543210", "amount": 5000000, "currency": "VND" }`,
+        },
+        {
+          type: "figure",
+          src: "/blog/idempotent-payment-api/sequence-vi.svg",
+          alt: "Sơ đồ tuần tự: phản hồi bị mất, ứng dụng gửi lại với cùng Idempotency-Key và nhận lại kết quả cũ, tiền chỉ bị trừ một lần",
+          caption: "Phản hồi bị mất không còn nguy hiểm: lần gửi lại với cùng khóa chỉ nhận lại kết quả đã lưu.",
         },
         { type: "h2", text: "Lưu khóa thế nào cho đúng" },
         {
@@ -92,6 +99,12 @@ Content-Type: application/json
             "Thử lại chỉ ở một tầng. Nếu client, gateway và service đều thử lại 3 lần, một sự cố có thể nhân lên 27 lần lưu lượng.",
           ],
         },
+        {
+          type: "figure",
+          src: "/blog/idempotent-payment-api/retry-jitter-vi.svg",
+          alt: "Biểu đồ so sánh số request thử lại theo thời gian khi không có jitter (dồn thành các đỉnh) và có jitter (trải đều)",
+          caption: "Không có jitter, mọi client thử lại cùng lúc và tạo đỉnh tải; jitter trải đều lưu lượng.",
+        },
         { type: "h2", text: "Ngân sách timeout: tầng trong phải ngắn hơn tầng ngoài" },
         {
           type: "p",
@@ -104,6 +117,12 @@ Content-Type: application/json
   API Gateway   timeout 12s   │ mỗi tầng ngắn hơn tầng ngoài
     Payment svc timeout 10s   │ và nhận deadline từ tầng trên
       Core/Switch timeout 8s ─┘`,
+        },
+        {
+          type: "figure",
+          src: "/blog/idempotent-payment-api/timeout-budget-vi.svg",
+          alt: "Biểu đồ timeout giảm dần: ứng dụng 15 giây, API Gateway 12 giây, Payment service 10 giây, Core 8 giây",
+          caption: "Timeout giảm dần từ ngoài vào trong.",
         },
         { type: "h2", text: "Khi kết quả không rõ: trả về “đang xử lý”, không trả về “thất bại”" },
         {
@@ -154,6 +173,12 @@ Idempotency-Key: 7f3c2a9e-1b4d-4c8e-9a51-2f0d6b7e8c13
 Content-Type: application/json
 
 { "from": "0123456789", "to": "9876543210", "amount": 5000000, "currency": "VND" }`,
+        },
+        {
+          type: "figure",
+          src: "/blog/idempotent-payment-api/sequence-en.svg",
+          alt: "Sequence diagram: the response is lost, the app retries with the same Idempotency-Key and gets the stored result, so the customer is charged once",
+          caption: "A lost response is no longer dangerous: retrying with the same key just replays the stored result.",
         },
         { type: "h2", text: "Storing keys correctly" },
         {
@@ -219,6 +244,12 @@ Content-Type: application/json
             "Retry at one layer only. If client, gateway and service all retry 3 times, one incident can multiply traffic 27-fold.",
           ],
         },
+        {
+          type: "figure",
+          src: "/blog/idempotent-payment-api/retry-jitter-en.svg",
+          alt: "Chart comparing retried requests over time without jitter (synchronized spikes) and with jitter (spread out)",
+          caption: "Without jitter every client retries at once and creates load spikes; jitter spreads the traffic.",
+        },
         { type: "h2", text: "Timeout budgets: inner layers must be shorter than outer ones" },
         {
           type: "p",
@@ -231,6 +262,12 @@ Content-Type: application/json
   API Gateway   timeout 12s   │ each layer shorter than the one outside it,
     Payment svc timeout 10s   │ receiving the deadline from above
       Core/Switch timeout 8s ─┘`,
+        },
+        {
+          type: "figure",
+          src: "/blog/idempotent-payment-api/timeout-budget-en.svg",
+          alt: "Timeout budget chart: app 15s, API Gateway 12s, payment service 10s, core 8s",
+          caption: "Timeouts shrinking from the outside in.",
         },
         { type: "h2", text: "When the outcome is unknown, say “processing”, not “failed”" },
         {

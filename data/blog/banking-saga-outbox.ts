@@ -3,6 +3,7 @@ import type { Post } from "../posts";
 export const post: Post = {
   slug: "banking-microservices-saga-outbox",
   date: "2026-10-25",
+  cover: "/blog/banking-microservices-saga-outbox/cover.svg",
   tags: ["Microservices", "Banking", "Kafka", "PostgreSQL"],
   content: {
     vi: {
@@ -58,6 +59,12 @@ export const post: Post = {
           type: "p",
           text: "Chú ý thứ tự: các bước có thể đảo ngược (giữ hạn mức, phong tỏa tiền) đặt trước, bước không thể đảo ngược (gửi lệnh ra ngoài) đặt sau cùng có thể, và các bước sau đó chỉ được phép thử lại cho đến khi thành công chứ không được thất bại. Đây là phân loại kinh điển: compensatable → pivot → retriable.",
         },
+        {
+          type: "figure",
+          src: "/blog/banking-microservices-saga-outbox/saga-flow-vi.svg",
+          alt: "Sơ đồ 6 bước của Saga chuyển tiền: 3 bước có thể bù trừ, bước gửi liên ngân hàng không thể hoàn tác, 2 bước chỉ thử lại",
+          caption: "Saga chuyển tiền liên ngân hàng: hoàn tác ngược khi lỗi ở các bước đầu, không bao giờ hoàn tác sau điểm không quay lại.",
+        },
         { type: "h2", text: "Orchestration hay Choreography?" },
         {
           type: "p",
@@ -93,6 +100,12 @@ const transferSaga = defineSaga<TransferCtx>("outbound-transfer", [
 COMMIT;
 -- Relay đọc outbox theo thứ tự, publish lên Kafka với key = account_id
 -- (giữ thứ tự sự kiện của cùng một tài khoản trong một partition), rồi đánh dấu đã gửi.`,
+        },
+        {
+          type: "figure",
+          src: "/blog/banking-microservices-saga-outbox/outbox-vi.svg",
+          alt: "Sơ đồ Transactional Outbox: service ghi dữ liệu và sự kiện trong cùng một transaction, relay đẩy sự kiện lên Kafka, consumer dùng bảng inbox",
+          caption: "Outbox: dữ liệu và sự kiện cùng một COMMIT; relay đẩy lên Kafka theo khóa account_id.",
         },
         { type: "h2", text: "Consumer idempotent: chấp nhận “ít nhất một lần”" },
         {
@@ -184,6 +197,12 @@ COMMIT;`,
           type: "p",
           text: "Order matters: reversible steps (reserving limits, holding funds) come first, the irreversible step (sending money out) comes as late as possible, and every step after it is only allowed to retry until it succeeds — never to fail. This is the classic compensatable → pivot → retriable classification.",
         },
+        {
+          type: "figure",
+          src: "/blog/banking-microservices-saga-outbox/saga-flow-en.svg",
+          alt: "Diagram of a six-step transfer Saga: three compensatable steps, an irreversible interbank submission, and two retriable steps",
+          caption: "Interbank transfer Saga: undo in reverse when early steps fail; never undo past the pivot.",
+        },
         { type: "h2", text: "Orchestration or choreography?" },
         {
           type: "p",
@@ -219,6 +238,12 @@ const transferSaga = defineSaga<TransferCtx>("outbound-transfer", [
 COMMIT;
 -- The relay reads the outbox in order, publishes to Kafka with key = account_id
 -- (keeping one account's events ordered within a partition), then marks rows as sent.`,
+        },
+        {
+          type: "figure",
+          src: "/blog/banking-microservices-saga-outbox/outbox-en.svg",
+          alt: "Transactional Outbox diagram: the service writes data and the event in one transaction, a relay publishes to Kafka, consumers use an inbox table",
+          caption: "Outbox: data and event share one COMMIT; the relay publishes to Kafka keyed by account_id.",
         },
         { type: "h2", text: "Idempotent consumers: embrace at-least-once" },
         {

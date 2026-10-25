@@ -3,6 +3,7 @@ import type { Post } from "../posts";
 export const post: Post = {
   slug: "aws-banking-microservices-architecture",
   date: "2026-10-25",
+  cover: "/blog/aws-banking-microservices-architecture/cover.svg",
   tags: ["AWS", "Architecture", "Security", "Banking"],
   content: {
     vi: {
@@ -15,27 +16,10 @@ export const post: Post = {
           text: "Đưa hệ thống ngân hàng lên cloud không chỉ là chuyển máy chủ sang EC2. Yêu cầu của ngành — bảo mật nhiều lớp, dữ liệu mã hóa, mọi thao tác truy vết được, hệ thống chạy liên tục kể cả khi một trung tâm dữ liệu gặp sự cố — phải được thiết kế từ đầu. Dưới đây là một kiến trúc tham chiếu tôi thấy hợp lý cho một nền tảng ngân hàng số dạng microservices, cùng các đánh đổi chính.",
         },
         {
-          type: "code",
-          lang: "text",
-          code: `Internet
-  │
-  ▼
-CloudFront + AWS WAF ─── Shield (chống DDoS)
-  │
-  ▼
-API Gateway (JWT / mTLS cho đối tác) ── VPC Link
-  │
-┌─┴───────────────────────── VPC (3 Availability Zones) ──────────────────┐
-│  Private subnets                                                        │
-│   EKS / ECS Fargate:  auth · account · payment · ledger · notification  │
-│        │                     │                    │                     │
-│        ▼                     ▼                    ▼                     │
-│   Aurora PostgreSQL     Amazon MSK (Kafka)   ElastiCache (Redis)        │
-│   (Multi-AZ, KMS)       (sự kiện, outbox)    (cache, rate limit)        │
-│                                                                         │
-│   VPC Endpoints → S3 · KMS · Secrets Manager · ECR · CloudWatch         │
-└─────────────────────────────────────────────────────────────────────────┘
-  Giám sát: CloudWatch · X-Ray/OpenTelemetry · CloudTrail → S3 (Object Lock)`,
+          type: "figure",
+          src: "/blog/aws-banking-microservices-architecture/architecture-vi.svg",
+          alt: "Sơ đồ kiến trúc: người dùng qua CloudFront và WAF tới API Gateway, vào VPC 3 AZ chứa các service trên EKS/ECS, Aurora, MSK, ElastiCache; cột bảo mật và giám sát; kết nối Direct Connect về hệ thống tại chỗ",
+          caption: "Kiến trúc tham chiếu: mọi thứ nằm trong private subnet trải trên 3 Availability Zone.",
         },
         { type: "h2", text: "1. Mạng: mặc định là riêng tư" },
         {
@@ -105,6 +89,12 @@ await producer.send({
           type: "note",
           text: "Trước khi đưa dữ liệu khách hàng lên cloud, cần đánh giá các yêu cầu pháp lý hiện hành về an toàn hệ thống thông tin trong ngành ngân hàng và về nơi lưu trữ dữ liệu cá nhân. Kiến trúc kỹ thuật tốt không thay thế cho bước đánh giá tuân thủ cùng bộ phận pháp chế và an ninh thông tin.",
         },
+        {
+          type: "figure",
+          src: "/blog/aws-banking-microservices-architecture/disaster-recovery-vi.svg",
+          alt: "Sơ đồ khôi phục thảm họa: region chính với Aurora writer trên 3 AZ, region dự phòng thu nhỏ với Aurora Global Database reader",
+          caption: "Khôi phục thảm họa đa region với Aurora Global Database.",
+        },
         { type: "h2", text: "8. Đừng quên chi phí" },
         {
           type: "p",
@@ -135,27 +125,10 @@ await producer.send({
           text: "Moving a banking system to the cloud is not just moving servers to EC2. The industry's requirements — layered security, encrypted data, every action traceable, and continuous operation even when a data centre fails — have to be designed in from day one. Below is a reference architecture I find sensible for a microservices-based digital banking platform, along with the main trade-offs.",
         },
         {
-          type: "code",
-          lang: "text",
-          code: `Internet
-  │
-  ▼
-CloudFront + AWS WAF ─── Shield (DDoS protection)
-  │
-  ▼
-API Gateway (JWT / mTLS for partners) ── VPC Link
-  │
-┌─┴───────────────────────── VPC (3 Availability Zones) ──────────────────┐
-│  Private subnets                                                        │
-│   EKS / ECS Fargate:  auth · account · payment · ledger · notification  │
-│        │                     │                    │                     │
-│        ▼                     ▼                    ▼                     │
-│   Aurora PostgreSQL     Amazon MSK (Kafka)   ElastiCache (Redis)        │
-│   (Multi-AZ, KMS)       (events, outbox)     (cache, rate limits)       │
-│                                                                         │
-│   VPC Endpoints → S3 · KMS · Secrets Manager · ECR · CloudWatch         │
-└─────────────────────────────────────────────────────────────────────────┘
-  Observability: CloudWatch · X-Ray/OpenTelemetry · CloudTrail → S3 (Object Lock)`,
+          type: "figure",
+          src: "/blog/aws-banking-microservices-architecture/architecture-en.svg",
+          alt: "Architecture diagram: users through CloudFront and WAF to API Gateway, into a 3-AZ VPC with services on EKS/ECS, Aurora, MSK and ElastiCache; security and observability columns; Direct Connect to on-premises systems",
+          caption: "Reference architecture: everything lives in private subnets across three Availability Zones.",
         },
         { type: "h2", text: "1. Network: private by default" },
         {
@@ -224,6 +197,12 @@ await producer.send({
         {
           type: "note",
           text: "Before moving customer data to the cloud, assess the current regulations on information-system security in banking and on where personal data may be stored. Good technical architecture does not replace a compliance review with your legal and information-security teams.",
+        },
+        {
+          type: "figure",
+          src: "/blog/aws-banking-microservices-architecture/disaster-recovery-en.svg",
+          alt: "Disaster recovery diagram: primary region with an Aurora writer across 3 AZs, scaled-down standby region with an Aurora Global Database reader",
+          caption: "Multi-region disaster recovery with Aurora Global Database.",
         },
         { type: "h2", text: "8. Don't forget cost" },
         {

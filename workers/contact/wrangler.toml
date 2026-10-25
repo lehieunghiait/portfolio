@@ -9,6 +9,13 @@ compatibility_date = "2026-10-01"
 name = "EMAIL"
 destination_address = "lehieunghia2402@gmail.com"
 
+# Lưu tin nhắn để xem trong trang quản trị /admin
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-contact"
+database_id = "05cd1ba1-8e33-470d-b4b5-d6145cd8ba17"
+migrations_dir = "migrations"
+
 [vars]
 TO_EMAIL = "lehieunghia2402@gmail.com"
 FROM_EMAIL = "contact@hieunghiagroup.online"

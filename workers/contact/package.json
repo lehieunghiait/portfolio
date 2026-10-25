@@ -1,0 +1,11 @@
+{
+  "name": "portfolio-contact",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@clerk/backend": "^3.26.2"
+  }
+}

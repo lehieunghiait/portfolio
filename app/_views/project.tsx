@@ -2,6 +2,7 @@ import { getProfile, type Lang } from "@/data/profile";
 import { homeSection, projectPath, ui } from "@/data/i18n";
 import { SiteFooter, SiteHeader } from "./site-header";
 import d from "./detail.module.css";
+import { SmartImg } from "../components/smart-img";
 
 // Trang chi tiết một dự án: bối cảnh → giải pháp → kết quả
 export function ProjectDetail({ lang, slug }: { lang: Lang; slug: string }) {
@@ -41,8 +42,7 @@ export function ProjectDetail({ lang, slug }: { lang: Lang; slug: string }) {
           {p.image && (
             <figure className={d.shot} data-tilt>
               <div className={d.browserBar} aria-hidden="true"><span /><span /><span /></div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.image} alt={t.project.screenshotAlt(p.name)} width={1280} height={800} />
+              <SmartImg placeholder src={p.image} alt={t.project.screenshotAlt(p.name)} width={1280} height={800} />
             </figure>
           )}
 

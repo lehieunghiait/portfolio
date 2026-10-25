@@ -36,7 +36,7 @@ export function AdminApp() {
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} appearance={clerkAppearance} localization={clerkLocalization.vi} afterSignOutUrl="/admin">
       <Shell account={<Show when="signed-in"><UserChip labels={{ signIn: "Đăng nhập", admin: "Quản trị" }} /></Show>}>
-        <ClerkLoading><p className={s.center}>Đang tải…</p></ClerkLoading>
+        <ClerkLoading><SignInSkeleton /></ClerkLoading>
         <ClerkLoaded>
           <Show when="signed-out">
             <div className={s.signIn}><SignIn routing="hash" /></div>
@@ -165,7 +165,7 @@ function Inbox() {
       </div>
 
       {error && <p className={s.error}>{error}</p>}
-      {!messages && !error && <p className={s.center}>Đang tải…</p>}
+      {!messages && !error && <ListSkeleton />}
       {messages && shown.length === 0 && <p className={s.center}>Không có tin nhắn nào.</p>}
 
       <ul className={s.list}>
@@ -201,5 +201,42 @@ function Inbox() {
         ))}
       </ul>
     </section>
+  );
+}
+
+// Khung giả lập thẻ đăng nhập Clerk khi thư viện đang tải (giữ bố cục không bị nhảy)
+function SignInSkeleton() {
+  return (
+    <div className={s.signIn} aria-busy="true" aria-label="Đang tải">
+      <div className={s.skCard}>
+        <span className={`${s.sk} ${s.skTitle}`} />
+        <span className={`${s.sk} ${s.skText}`} />
+        <div className={s.skSocial}>
+          <span className={s.sk} /><span className={s.sk} /><span className={s.sk} />
+        </div>
+        <span className={`${s.sk} ${s.skLabel}`} />
+        <span className={`${s.sk} ${s.skInput}`} />
+        <span className={`${s.sk} ${s.skButton}`} />
+      </div>
+    </div>
+  );
+}
+
+// Các dòng giả lập danh sách tin nhắn khi đang gọi API
+function ListSkeleton() {
+  return (
+    <ul className={s.list} aria-busy="true" aria-label="Đang tải">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <li key={i} className={`${s.item} ${s.skRow}`} style={{ animationDelay: `${i * 80}ms` }}>
+          <span className={`${s.sk} ${s.skDot}`} />
+          <span className={s.skWho}>
+            <span className={`${s.sk} ${s.skName}`} />
+            <span className={`${s.sk} ${s.skMail}`} />
+          </span>
+          <span className={`${s.sk} ${s.skPreview}`} style={{ width: `${90 - i * 9}%` }} />
+          <span className={`${s.sk} ${s.skMeta}`} />
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -4,6 +4,7 @@ import { contactEndpoint, turnstileSiteKey } from "@/data/site";
 import s from "./portfolio.module.css";
 import { Typewriter } from "../components/typewriter";
 import { CountUp } from "../components/count-up";
+import { SmartImg } from "../components/smart-img";
 import { ContactForm } from "../components/contact-form";
 import { TechMarquee } from "../components/tech-marquee";
 import { SiteFooter, SiteHeader } from "./site-header";
@@ -81,8 +82,7 @@ export function Portfolio({ lang }: { lang: Lang }) {
             <div className={s.photoGlow} aria-hidden="true" />
             <div className={s.photoOrbit} aria-hidden="true" />
             <div className={s.photoFrame} data-spotlight data-tilt>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={profile.photo} alt={t.photoAlt(profile.name)} width={528} height={660} fetchPriority="high" />
+              <SmartImg placeholder src={profile.photo} alt={t.photoAlt(profile.name)} width={528} height={660} fetchPriority="high" />
               <div className={s.photoCaption}>
                 <strong>{profile.name}</strong>
                 <span>{profile.title} · {profile.location}</span>
@@ -181,8 +181,7 @@ export function Portfolio({ lang }: { lang: Lang }) {
               <a key={p.slug} href={projectPath(lang, p.slug)} className={s.project} data-spotlight>
                 <div className={s.cover} style={{ background: covers[i % covers.length] }}>
                   {p.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img className={s.coverShot} src={p.image} alt="" width={1280} height={800} loading="lazy" />
+                    <SmartImg fade className={s.coverShot} src={p.image} alt="" width={1280} height={800} loading="lazy" />
                   ) : (
                     <span>{p.name.split(" ").map((w) => w[0]).join("").slice(0, 3)}</span>
                   )}
@@ -203,8 +202,7 @@ export function Portfolio({ lang }: { lang: Lang }) {
 
         {/* Contact */}
         <section id="contact" className={`${s.contact} ${s.reveal}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={s.contactPhoto} src={profile.photoFace} alt="" width={88} height={88} loading="lazy" />
+          <SmartImg placeholder className={s.contactPhoto} src={profile.photoFace} alt="" width={88} height={88} loading="lazy" />
           <p className={s.eyebrow}><span>04</span> {t.nav.contact}</p>
           <h2 className={s.contactTitle}>
             {t.contactTitle[0]}<br /><span className={s.gradientText}>{t.contactTitle[1]}</span> {t.contactTitle[2]}

@@ -65,3 +65,43 @@
   .preview { display: none; }
   .body { padding-left: 16px; }
 }
+
+/* ---------- Skeleton khi đang tải ---------- */
+.sk {
+  display: block; border-radius: 8px;
+  background: linear-gradient(100deg, color-mix(in srgb, var(--text) 7%, var(--bg-elev)) 35%, color-mix(in srgb, var(--text) 16%, var(--bg-elev)) 50%, color-mix(in srgb, var(--text) 7%, var(--bg-elev)) 65%) 0 0 / 250% 100%;
+  animation: sk-shimmer 1.4s linear infinite;
+}
+@keyframes sk-shimmer { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+
+.skCard {
+  width: min(400px, 100%); padding: 40px 32px; display: grid; gap: 14px; justify-items: center;
+  border-radius: 16px; border: 1px solid var(--border); background: var(--bg-elev);
+}
+.skTitle { width: 60%; height: 20px; }
+.skText { width: 78%; height: 12px; margin-bottom: 12px; }
+.skSocial { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.skSocial .sk { height: 34px; }
+.skLabel { width: 30%; height: 12px; justify-self: start; }
+.skInput { width: 100%; height: 36px; }
+.skButton { width: 100%; height: 36px; margin-top: 10px; }
+
+.skRow {
+  display: grid; grid-template-columns: 10px minmax(0, 200px) minmax(0, 1fr) 120px; align-items: center; gap: 14px;
+  padding: 16px; animation: sk-in .4s ease both;
+}
+@keyframes sk-in { from { opacity: 0; transform: translateY(6px); } }
+.skDot { width: 8px; height: 8px; border-radius: 50%; }
+.skWho { display: grid; gap: 6px; }
+.skName { width: 70%; height: 13px; }
+.skMail { width: 90%; height: 10px; }
+.skPreview { height: 12px; }
+.skMeta { height: 12px; }
+
+@media (max-width: 640px) {
+  .skRow { grid-template-columns: 10px minmax(0, 1fr) 80px; }
+  .skPreview { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk, .skRow { animation: none; }
+}

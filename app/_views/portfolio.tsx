@@ -8,6 +8,7 @@ import { Typewriter } from "../components/typewriter";
 import { CountUp } from "../components/count-up";
 import { SmartImg } from "../components/smart-img";
 import { ContactForm } from "../components/contact-form";
+import { SocialIcon } from "../components/social-icon";
 import { TechMarquee } from "../components/tech-marquee";
 import { SiteFooter, SiteHeader } from "./site-header";
 
@@ -74,7 +75,13 @@ export function Portfolio({ lang }: { lang: Lang }) {
             {profile.links.length > 0 && (
               <ul className={s.socials}>
                 {profile.links.map((l) => (
-                  <li key={l.label}><a href={l.url} target="_blank" rel="noreferrer">{l.label} ↗</a></li>
+                  <li key={l.label}>
+                    <a href={l.url} target="_blank" rel="noreferrer" className={s.social}>
+                      <SocialIcon name={l.label} />
+                      <span>{l.label}</span>
+                      <span aria-hidden className={s.socialArrow}>↗</span>
+                    </a>
+                  </li>
                 ))}
               </ul>
             )}

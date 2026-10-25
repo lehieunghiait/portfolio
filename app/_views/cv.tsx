@@ -42,7 +42,10 @@ export function Cv({ lang }: { lang: Lang }) {
               <li>{profile.location}</li>
               <li><a href={profile.website}>{profile.website.replace(/^https?:\/\//, "")}</a></li>
               {profile.links.map((l) => (
-                <li key={l.label}><a href={l.url} target="_blank" rel="noreferrer">{l.label}</a></li>
+                <li key={l.label}>
+                  {/* Hiện đường dẫn rút gọn để bản in/PDF vẫn đọc được */}
+                  <a href={l.url} target="_blank" rel="noreferrer">{l.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}</a>
+                </li>
               ))}
             </ul>
           </div>

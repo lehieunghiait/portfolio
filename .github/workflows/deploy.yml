@@ -1,0 +1,44 @@
+# Build trang tĩnh (kèm CV PDF) và deploy lên Cloudflare Pages.
+# - Push lên main  -> bản production (hieunghiagroup.online)
+# - Push nhánh khác -> bản preview tại <nhánh>.hieunghiagroup.pages.dev
+# Cần 2 secret trong GitHub (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN  (quyền Account · Cloudflare Pages · Edit)
+#   CLOUDFLARE_ACCOUNT_ID
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: ["**"]
+    paths-ignore: ["workers/**", "**.md"]
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # next build + tạo CV PDF bằng Chrome có sẵn trên runner
+      - run: npm run build
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy out --project-name=hieunghiagroup --branch=${{ github.ref_name }} --commit-hash=${{ github.sha }}

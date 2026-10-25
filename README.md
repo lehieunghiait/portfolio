@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lê Hiếu Nghĩa — Portfolio & CV
 
-## Getting Started
+Bilingual (English / Vietnamese) personal portfolio, CV and technical blog — live at **[hieunghiagroup.online](https://hieunghiagroup.online)**.
 
-First, run the development server:
+![Deploy](https://github.com/lehieunghiait/portfolio/actions/workflows/deploy.yml/badge.svg)
+
+## Highlights
+
+- **Next.js 16 (App Router) static export** — no server runtime, hosted on Cloudflare Pages.
+- **Two languages, two root layouts** — English at `/`, Vietnamese at `/vi`, with hreflang, sitemap and per-language Open Graph images.
+- **Client-side navigation with view transitions** — project screenshots and post titles morph between list and detail pages.
+- **Dark / light themes** with a circular reveal transition, scroll-driven animations and `prefers-reduced-motion` support.
+- **Printable CV** — `/cv` page plus PDFs generated at build time with headless Chrome.
+- **Technical blog** with bilingual posts and generated SVG diagrams (`scripts/blog-art.py`).
+- **Contact form** backed by a Cloudflare Worker: Turnstile anti-spam, Cloudflare Email Service and D1 storage.
+- **Admin inbox** at `/admin` — Clerk authentication; the Worker verifies the session token and an `admin` role on every request.
+
+## Tech stack
+
+Next.js · React 19 · TypeScript · CSS Modules · Cloudflare Pages / Workers / D1 / Turnstile / Email Service · Clerk · Puppeteer
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # static site in out/ + CV PDFs (needs a local Chrome)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Content lives in `data/` (profile, UI strings, blog posts) — most edits don't touch components.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Every push runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): it builds the site and deploys it to Cloudflare Pages — `main` goes to production, other branches get preview URLs. The contact Worker in `workers/contact/` is deployed separately with `npx wrangler deploy`.
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The source code is available for reference. Personal content (text, photos, CV) belongs to Lê Hiếu Nghĩa and may not be reused.

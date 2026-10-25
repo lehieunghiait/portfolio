@@ -44,5 +44,5 @@ Every submission is also stored in D1 (`portfolio-contact`, schema in `workers/c
 
 ## Deployment notes
 
-- Cloudflare Pages project `hieunghiagroup` is Direct Upload (not Git-connected); deploy manually after `npm run build`.
+- Cloudflare Pages project `hieunghiagroup` is a Direct Upload project, which cannot be Git-connected. Deployment runs through GitHub Actions (`.github/workflows/deploy.yml`, repo `lehieunghiait/portfolio`) using `wrangler pages deploy`. `main` deploys to production and other branches to previews. It needs the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo secrets. On CI, `scripts/build-pdf.mjs` fails the build if Chrome is missing, rather than shipping without the PDFs. A manual `npx wrangler pages deploy out ...` still works.
 - The zone currently serves a Cloudflare bot challenge to non-browser clients, so verify deployments against `https://hieunghiagroup.pages.dev` rather than the custom domain.

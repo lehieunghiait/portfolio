@@ -21,6 +21,11 @@ const CHROME_PATHS = [
 
 const chrome = CHROME_PATHS.find((p) => existsSync(p));
 if (!chrome) {
+  // Trên CI bắt buộc phải có PDF, nếu không trang deploy sẽ có liên kết "Tải CV" bị hỏng
+  if (process.env.CI) {
+    console.error("✗ Không tìm thấy Chrome trên CI — không thể tạo CV PDF.");
+    process.exit(1);
+  }
   console.warn("⚠ Không tìm thấy Chrome — bỏ qua bước tạo CV PDF (đặt biến CHROME_PATH để chỉ định).");
   process.exit(0);
 }
@@ -46,7 +51,8 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
 const base = `http://127.0.0.1:${server.address().port}`;
 
-const browser = await puppeteer.launch({ executablePath: chrome, headless: true });
+// Runner Linux của CI chặn sandbox của Chrome, nên tắt sandbox khi chạy trên CI
+const browser = await puppeteer.launch({ executablePath: chrome, headless: true, args: process.env.CI ? ["--no-sandbox"] : [] });
 try {
   const page = await browser.newPage();
   // Luôn xuất bản sáng, không phụ thuộc giao diện của máy

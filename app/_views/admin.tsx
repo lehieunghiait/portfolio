@@ -94,7 +94,10 @@ function Inbox() {
         ...init,
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, ...init.headers },
       });
-      if (!res.ok) throw new Error(((await res.json().catch(() => ({}))) as { error?: string }).error ?? String(res.status));
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string; reason?: string };
+        throw new Error([body.error ?? res.status, body.reason].filter(Boolean).join(": "));
+      }
       return res.json();
     },
     [getToken],

@@ -119,15 +119,16 @@ async function requireAdmin(request: Request, env: Env, headers: Record<string, 
 
   let userId: string;
   try {
-    const { data, errors } = await verifyToken(token, {
+    // verifyToken trả về nội dung token; token sai / hết hạn / khác nguồn (azp) thì ném TokenVerificationError
+    const payload = await verifyToken(token, {
       secretKey: env.CLERK_SECRET_KEY,
       authorizedParties: allowedOrigins(env),
     });
-    if (errors || !data?.sub) return json(401, { error: "invalid_token" }, headers);
-    userId = data.sub;
-  } catch {
-    // Token sai định dạng có thể làm thư viện ném lỗi thay vì trả `errors`
-    return json(401, { error: "invalid_token" }, headers);
+    userId = payload.sub;
+  } catch (e) {
+    const err = e as { reason?: string; message?: string };
+    console.error("verifyToken failed", err.reason, err.message);
+    return json(401, { error: "invalid_token", reason: err.reason ?? "malformed" }, headers);
   }
 
   // Vai trò lấy từ public_metadata của người dùng (chỉ đặt được từ phía máy chủ / dashboard Clerk)

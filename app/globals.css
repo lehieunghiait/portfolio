@@ -156,3 +156,31 @@ ul, ol { list-style: none; }
 /* Rê chuột vào ngôn ngữ kia: nền nhích nhẹ về phía đó */
 .lang-switch[data-lang="vi"]:has(a:last-child:hover)::before { transform: translateX(12%); }
 .lang-switch[data-lang="en"]:has(a:first-child:hover)::before { transform: translateX(88%); }
+
+/* Form liên hệ (components/contact-form.tsx) */
+.contact-form { display: grid; gap: 16px; }
+.contact-form .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.contact-form label { display: grid; gap: 6px; font-size: .88rem; font-weight: 600; }
+.contact-form input, .contact-form textarea {
+  width: 100%; font: inherit; font-weight: 400; color: var(--text);
+  padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg);
+  transition: border-color .2s, box-shadow .2s;
+}
+.contact-form textarea { resize: vertical; min-height: 130px; }
+.contact-form input:focus, .contact-form textarea:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.contact-form .cf-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.contact-form .cf-turnstile { min-height: 65px; }
+.contact-form .cf-submit {
+  justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 600; color: #fff;
+  padding: 13px 26px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--accent-2)));
+  box-shadow: 0 10px 30px -10px var(--accent); transition: transform .2s, opacity .2s;
+}
+.contact-form .cf-submit:hover { transform: translateY(-2px); }
+.contact-form .cf-submit:disabled { opacity: .6; cursor: progress; transform: none; }
+.contact-form .cf-status { min-height: 1.4em; font-size: .93rem; font-weight: 500; }
+.contact-form .cf-success { color: var(--ok); }
+.contact-form .cf-error, .contact-form .cf-captcha { color: #e5484d; }
+@media (max-width: 600px) { .contact-form .cf-row { grid-template-columns: 1fr; } }

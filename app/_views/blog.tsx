@@ -1,0 +1,95 @@
+import type { Lang } from "@/data/profile";
+import { paths, postPath, ui } from "@/data/i18n";
+import { getPost, posts, type Block } from "@/data/posts";
+import { SiteFooter, SiteHeader } from "./site-header";
+import d from "./detail.module.css";
+
+// Ước tính thời gian đọc (~200 từ/phút)
+function readingMinutes(blocks: Block[]) {
+  const words = blocks
+    .map((b) => (b.type === "ul" ? b.items.join(" ") : b.type === "code" ? b.code : b.text))
+    .join(" ")
+    .split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+export function BlogIndex({ lang }: { lang: Lang }) {
+  const t = ui[lang];
+  return (
+    <>
+      <SiteHeader lang={lang} hrefs={{ vi: paths.vi.blog, en: paths.en.blog }} />
+      <main id="top" className={d.main}>
+        <div className={d.article}>
+          <header className={d.header}>
+            <p className={d.eyebrow}>{t.blog.title}</p>
+            <h1 className={d.title}>{t.blog.heading}</h1>
+            <p className={d.lead}>{t.blog.lead}</p>
+          </header>
+          {posts.length === 0 && <p className={d.lead}>{t.blog.empty}</p>}
+          <ol className={d.postList}>
+            {posts.map((post) => {
+              const c = post.content[lang];
+              return (
+                <li key={post.slug}>
+                  <a href={postPath(lang, post.slug)} className={d.postCard} data-spotlight>
+                    <p className={d.postMeta}>
+                      <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
+                    </p>
+                    <h2>{c.title}</h2>
+                    <p>{c.excerpt}</p>
+                    <ul className={d.chips}>{post.tags.map((x) => <li key={x}>{x}</li>)}</ul>
+                    <span className={d.readMore}>{t.blog.readMore} <span aria-hidden>→</span></span>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </main>
+      <SiteFooter lang={lang} />
+    </>
+  );
+}
+
+function BlockView({ block }: { block: Block }) {
+  switch (block.type) {
+    case "h2": return <h2>{block.text}</h2>;
+    case "p": return <p>{block.text}</p>;
+    case "ul": return <ul className={d.list}>{block.items.map((x) => <li key={x}>{x}</li>)}</ul>;
+    case "note": return <aside className={d.note}>{block.text}</aside>;
+    case "code":
+      return (
+        <pre className={d.code} data-lang={block.lang}>
+          <code>{block.code}</code>
+        </pre>
+      );
+  }
+}
+
+export function BlogPost({ lang, slug }: { lang: Lang; slug: string }) {
+  const t = ui[lang];
+  const post = getPost(slug)!;
+  const c = post.content[lang];
+  return (
+    <>
+      <SiteHeader lang={lang} hrefs={{ vi: postPath("vi", slug), en: postPath("en", slug) }} />
+      <main id="top" className={d.main}>
+        <article className={d.article}>
+          <a href={paths[lang].blog} className={d.back}>{t.blog.back}</a>
+          <header className={d.header}>
+            <p className={d.postMeta}>
+              <time dateTime={post.date}>{t.blog.date(post.date)}</time> · {t.blog.minRead(readingMinutes(c.body))}
+            </p>
+            <h1 className={d.title}>{c.title}</h1>
+            <p className={d.lead}>{c.excerpt}</p>
+            <ul className={d.chips}>{post.tags.map((x) => <li key={x}>{x}</li>)}</ul>
+          </header>
+          <div className={d.prose}>
+            {c.body.map((b, i) => <BlockView key={i} block={b} />)}
+          </div>
+        </article>
+      </main>
+      <SiteFooter lang={lang} />
+    </>
+  );
+}

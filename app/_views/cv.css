@@ -151,8 +151,9 @@
 /* In ra PDF: khổ A4, bỏ nền và bóng đổ */
 @media print {
   @page { size: A4; margin: 0; }
-  .cv-root {
-    --bg: #fff; --paper: #fff; --text: #0f172a; --muted: #475569;
+  /* Luôn in bản sáng, kể cả khi người xem đang bật giao diện tối (selector đủ mạnh để thắng quy tắc dark) */
+  :root:is([data-theme], :not([data-theme])) .cv-root {
+    --bg: #fff; --paper: #fff; --text: #0f172a; --muted: #475569; --side-text: #e2e8f0; --side-muted: #94a3b8;
     --accent: #2563eb; --border: #e2e8f0; --tag: #eff4ff; --side: #1e293b;
   }
   .cv-root { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -171,3 +172,13 @@
 .cv-root .theme-toggle { background: var(--paper); }
 .cv-tools { display: flex; align-items: center; gap: 10px; }
 .cv-root .lang-switch { background: var(--paper); }
+.cv-root a.btn { display: block; text-align: center; text-decoration: none; }
+.languages li { gap: 12px; }
+.languages li .muted { text-align: right; }
+
+/* Đặt cuối file để thắng các quy tắc display ở trên khi in / xuất PDF */
+@media print {
+  .no-print, .cv-toolbar { display: none !important; }
+  .cv { grid-template-columns: 290px 1fr; }
+}
+.languages li > span:first-child { white-space: nowrap; }

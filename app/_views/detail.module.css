@@ -1,0 +1,125 @@
+/* Trang chi tiết dự án và blog — dùng chung bố cục bài viết */
+.main { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.article { max-width: 820px; margin: 0 auto; padding: 56px 0 24px; }
+
+.back {
+  display: inline-flex; font-size: .92rem; font-weight: 600; color: var(--muted);
+  transition: color .2s, transform .2s;
+}
+.back:hover { color: var(--accent); transform: translateX(-3px); }
+
+.header { margin: 28px 0 36px; animation: rise .7s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+.eyebrow { font-size: .8rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.title { font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.12; letter-spacing: -.03em; margin: 10px 0 14px; text-wrap: balance; }
+.lead { font-size: 1.12rem; color: var(--muted); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
+.chips li {
+  font-size: .8rem; padding: 4px 11px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--muted); background: var(--bg-elev);
+}
+.header .chips { margin-top: 16px; }
+
+/* Thông tin nhanh của dự án */
+.facts {
+  display: grid; grid-template-columns: repeat(4, minmax(0, auto)); gap: 18px 36px; align-items: start;
+  padding: 22px 26px; border-radius: 18px; background: var(--bg-elev); border: 1px solid var(--border);
+  box-shadow: var(--shadow); animation: rise .7s .1s cubic-bezier(.2, .7, .2, 1) both;
+}
+.facts dt { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
+.facts dd { font-weight: 600; }
+.factAction { justify-self: end; align-self: center; }
+.visit {
+  display: inline-flex; padding: 10px 18px; border-radius: 12px; font-weight: 600; font-size: .92rem; color: #fff;
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--accent-2)));
+  box-shadow: 0 10px 26px -10px var(--accent); transition: transform .2s;
+}
+.visit:hover { transform: translateY(-2px); }
+
+/* Ảnh chụp màn hình trong khung trình duyệt */
+.shot {
+  margin: 40px 0 8px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+  background: var(--bg-elev); box-shadow: 0 30px 70px -30px var(--glow), var(--shadow);
+  transform: perspective(1200px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
+  transition: transform .5s cubic-bezier(.2, .7, .2, 1);
+  animation: rise .8s .2s cubic-bezier(.2, .7, .2, 1) both;
+}
+.shot:hover { transition-duration: .15s; }
+.browserBar { display: flex; gap: 7px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+.browserBar span { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.browserBar span:nth-child(2) { background: #febc2e; }
+.browserBar span:nth-child(3) { background: #28c840; }
+.shot img { display: block; width: 100%; height: auto; }
+
+/* Các phần nội dung */
+.section { margin-top: 48px; }
+.section h2, .more h2 {
+  display: flex; align-items: center; gap: 12px; font-size: 1.45rem; letter-spacing: -.02em; margin-bottom: 14px;
+}
+.section h2 span {
+  font-size: .8rem; font-weight: 700; color: var(--accent); padding: 4px 8px; border-radius: 8px; background: var(--accent-soft);
+}
+.section p { color: var(--muted); font-size: 1.05rem; }
+.list { list-style: none; display: grid; gap: 10px; color: var(--muted); font-size: 1.02rem; }
+.list li { position: relative; padding-left: 26px; }
+.list li::before {
+  content: ""; position: absolute; left: 4px; top: .62em; width: 10px; height: 10px; border-radius: 3px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); transform: rotate(45deg);
+}
+.results li::before { content: "✓"; background: none; transform: none; top: 0; left: 2px; width: auto; height: auto; color: var(--ok); font-weight: 800; }
+
+@supports (animation-timeline: view()) {
+  .section, .postCard, .moreCard {
+    animation: reveal linear both; animation-timeline: view(); animation-range: entry 5% entry 40%;
+  }
+  @keyframes reveal { from { opacity: 0; transform: translateY(30px); } }
+}
+
+/* Dự án khác */
+.more { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+.moreGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.moreCard, .postCard {
+  display: grid; gap: 6px; padding: 22px 24px; border-radius: 18px;
+  background: var(--bg-elev); border: 1px solid var(--border); transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.moreCard:hover, .postCard:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); box-shadow: var(--shadow); }
+.moreCard strong { font-size: 1.1rem; }
+.moreCard > span:last-child { color: var(--muted); font-size: .94rem; }
+.moreMeta, .postMeta { font-size: .82rem; color: var(--faint); font-weight: 500; }
+
+/* Blog */
+.postList { list-style: none; display: grid; gap: 16px; }
+.postCard { gap: 10px; padding: 28px; }
+.postCard h2 { font-size: 1.35rem; line-height: 1.3; letter-spacing: -.02em; }
+.postCard > p:not(.postMeta) { color: var(--muted); }
+.readMore { font-weight: 600; color: var(--accent); margin-top: 4px; }
+.readMore span, .moreCard strong span { display: inline-block; transition: transform .25s; }
+.postCard:hover .readMore span, .moreCard:hover strong span { transform: translateX(4px); }
+
+.prose { font-size: 1.06rem; line-height: 1.8; }
+.prose > * + * { margin-top: 18px; }
+.prose h2 { font-size: 1.45rem; line-height: 1.3; letter-spacing: -.02em; margin-top: 40px; }
+.prose p { color: color-mix(in srgb, var(--text) 82%, var(--muted)); }
+.code {
+  overflow-x: auto; padding: 18px 20px; border-radius: 14px; font-size: .9rem; line-height: 1.6;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #0d1020; color: #e3e6f3; border: 1px solid #22263a; position: relative;
+}
+.code[data-lang]::before {
+  content: attr(data-lang); position: absolute; top: 8px; right: 12px;
+  font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: #8a8fa3;
+}
+.note {
+  padding: 16px 20px; border-radius: 14px; border-left: 4px solid var(--accent);
+  background: var(--accent-soft); color: var(--text);
+}
+
+@media (max-width: 720px) {
+  .main { padding: 0 16px; }
+  .article { padding-top: 36px; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 18px; }
+  .factWide, .factAction { grid-column: 1 / -1; }
+  .factAction { justify-self: start; }
+  .postCard { padding: 22px 20px; }
+}

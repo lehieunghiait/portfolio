@@ -1,6 +1,5 @@
 // Toàn bộ nội dung CV nằm ở file này — chỉ cần sửa ở đây, giao diện tự cập nhật.
 // Thông tin chung ở `shared`; phần chữ cần dịch nằm ở `content.vi` và `content.en`.
-// LƯU Ý: đây là dữ liệu MẪU, hãy thay bằng thông tin thật.
 
 export type Lang = "vi" | "en";
 export const langs: Lang[] = ["vi", "en"];
@@ -14,10 +13,20 @@ export type Experience = {
 };
 
 export type Project = {
+  // Đường dẫn trang chi tiết: /projects/<slug> và /en/projects/<slug>
+  slug: string;
   name: string;
   description: string;
   tech: string[];
+  year: string;
+  role: string;
+  // Ảnh chụp màn hình trong public/ (tùy chọn)
+  image?: string;
   link?: string;
+  // Nội dung trang chi tiết
+  context: string;
+  solution: string[];
+  results: string[];
 };
 
 export type Education = {
@@ -73,26 +82,30 @@ const content: Record<Lang, Content> = {
       { value: "5+", label: "Công nghệ cốt lõi" },
     ],
     skills: [
-      { group: "Frontend", items: ["TypeScript", "React", "Next.js", "HTML/CSS"] },
+      {
+        group: "Frontend",
+        items: ["TypeScript", "React", "Next.js", "HTML/CSS"],
+      },
       { group: "Backend", items: ["Node.js", "REST API", "PostgreSQL"] },
-      { group: "Hạ tầng & DevOps", items: ["Cloudflare", "Docker", "Git", "CI/CD"] },
+      {
+        group: "Hạ tầng & DevOps",
+        items: ["Cloudflare", "Docker", "Git", "CI/CD"],
+      },
     ],
     experience: [
       {
-        role: "Software Engineer",
-        company: "Tên công ty A",
+        role: "Chuyên viên phát triển ứng dụng",
+        company: "Ngân hàng TMCP Việt Nam Thương Tín",
         period: "2024 — Hiện tại",
-        location: "Hà Nội",
+        location: "TP. Hồ Chí Minh",
         highlights: [
           "Phát triển và bảo trì các ứng dụng web phục vụ khách hàng, đảm bảo tính ổn định khi vận hành.",
-          "Tối ưu hiệu năng tải trang, cải thiện rõ rệt tốc độ phản hồi và trải nghiệm người dùng.",
-          "Phối hợp chặt chẽ với đội Thiết kế và Sản phẩm, từ khâu định hình yêu cầu đến khi phát hành tính năng.",
         ],
       },
       {
-        role: "Junior Developer",
-        company: "Tên công ty B",
-        period: "2022 — 2024",
+        role: "Nhân viên lập trình",
+        company: "Công ty Cổ phần Phân phối Quốc tế",
+        period: "2025 — 2026",
         location: "TP. Hồ Chí Minh",
         highlights: [
           "Xây dựng hệ thống giao diện quản trị nội bộ bằng React.",
@@ -102,19 +115,55 @@ const content: Record<Lang, Content> = {
     ],
     projects: [
       {
-        name: "Hieu Nghia Group",
-        description: "Website doanh nghiệp, triển khai trên hạ tầng Cloudflare Pages với tên miền riêng và HTTPS.",
-        tech: ["HTML", "CSS", "Cloudflare Pages"],
+        slug: "portfolio-cv",
+        name: "Portfolio & CV",
+        description:
+          "Trang hồ sơ cá nhân song ngữ Việt – Anh, hỗ trợ giao diện sáng/tối và xuất CV ra PDF.",
+        tech: ["Next.js", "TypeScript", "CSS", "Cloudflare Pages"],
+        year: "2026",
+        role: "Thiết kế & phát triển",
+        image: "/projects/portfolio-cv.jpg",
         link: "https://hieunghiagroup.online",
+        context:
+          "Cần một trang hồ sơ cá nhân chuyên nghiệp để giới thiệu kinh nghiệm và dự án tới nhà tuyển dụng, đọc được bằng cả tiếng Việt lẫn tiếng Anh, đồng thời có bản CV in được.",
+        solution: [
+          "Xây dựng bằng Next.js (App Router) ở chế độ xuất file tĩnh, lưu trữ trên Cloudflare Pages với tên miền riêng.",
+          "Song ngữ bằng hai nhóm route có root layout riêng, khai báo hreflang và sitemap để công cụ tìm kiếm hiểu đúng hai bản dịch.",
+          "Giao diện sáng/tối có lưu lựa chọn, không nháy màu khi tải trang; chuyển chủ đề bằng View Transitions API.",
+          "Hiệu ứng chuyển động bằng CSS scroll-driven animations, tự tắt khi người dùng bật chế độ giảm chuyển động.",
+          "Ảnh xem trước khi chia sẻ link được tạo tự động lúc build; CV xuất ra PDF khổ A4.",
+        ],
+        results: [
+          "Toàn bộ nội dung nằm trong một file dữ liệu — cập nhật CV không cần sửa giao diện.",
+          "Trang tĩnh hoàn toàn, tải nhanh và không tốn chi phí máy chủ.",
+        ],
       },
       {
-        name: "Portfolio & CV",
-        description: "Trang hồ sơ cá nhân song ngữ Việt – Anh, hỗ trợ giao diện sáng/tối và xuất CV ra PDF.",
-        tech: ["Next.js", "TypeScript", "Cloudflare Pages"],
+        slug: "hieu-nghia-group",
+        name: "Hieu Nghia Group",
+        description: "Website giới thiệu doanh nghiệp một trang, triển khai trên Cloudflare Pages.",
+        tech: ["HTML", "CSS", "Cloudflare Pages"],
+        year: "2026",
+        role: "Phát triển & triển khai",
+        image: "/projects/hieu-nghia-group.jpg",
+        context:
+          "Tên miền hieunghiagroup.online đã trỏ về Cloudflare nhưng không hiển thị được trang nào. Cần tìm nguyên nhân và đưa một website giới thiệu doanh nghiệp lên mạng.",
+        solution: [
+          "Chẩn đoán sự cố: project Cloudflare Pages chưa từng được deploy (lỗi 522) và tên miền thiếu bản ghi DNS.",
+          "Xây dựng website một trang bằng HTML/CSS thuần, hỗ trợ giao diện sáng/tối và hiển thị tốt trên điện thoại.",
+          "Deploy bằng Wrangler, gắn tên miền riêng và cấu hình bản ghi CNAME cho tên miền gốc và www.",
+        ],
+        results: [
+          "Tên miền hoạt động trở lại với HTTPS; về sau được dùng để đặt trang portfolio này.",
+        ],
       },
     ],
     education: [
-      { school: "Tên trường đại học", degree: "Cử nhân Công nghệ Thông tin", period: "2018 — 2022" },
+      {
+        school: "Trường Đại học Công Nghệ TP. Hồ Chí Minh",
+        degree: "Cử nhân Công nghệ Thông tin",
+        period: "2020 — 2025",
+      },
     ],
     languages: [
       { name: "Tiếng Việt", level: "Bản ngữ" },
@@ -125,7 +174,12 @@ const content: Record<Lang, Content> = {
   en: {
     title: "Software Engineer",
     tagline: "I build web products that are",
-    taglineWords: ["fast & scalable.", "user-focused.", "production-ready.", "built to last."],
+    taglineWords: [
+      "fast & scalable.",
+      "user-focused.",
+      "production-ready.",
+      "built to last.",
+    ],
     summary:
       "Full-stack software engineer specializing in TypeScript, React/Next.js and Node.js. I work across the entire product lifecycle — from requirements and solution design to deployment and operations — with a focus on clean code, reliable performance and consistent user experiences.",
     location: "Vietnam",
@@ -135,26 +189,30 @@ const content: Record<Lang, Content> = {
       { value: "5+", label: "Core technologies" },
     ],
     skills: [
-      { group: "Frontend", items: ["TypeScript", "React", "Next.js", "HTML/CSS"] },
+      {
+        group: "Frontend",
+        items: ["TypeScript", "React", "Next.js", "HTML/CSS"],
+      },
       { group: "Backend", items: ["Node.js", "REST API", "PostgreSQL"] },
-      { group: "Infrastructure & DevOps", items: ["Cloudflare", "Docker", "Git", "CI/CD"] },
+      {
+        group: "Infrastructure & DevOps",
+        items: ["Cloudflare", "Docker", "Git", "CI/CD"],
+      },
     ],
     experience: [
       {
-        role: "Software Engineer",
-        company: "Company A",
+        role: "Application Development Specialist",
+        company: "Vietbank",
         period: "2024 — Present",
-        location: "Hanoi",
+        location: "Ho Chi Minh City",
         highlights: [
           "Develop and maintain customer-facing web applications with a focus on production stability.",
-          "Optimize page-load performance, noticeably improving responsiveness and user experience.",
-          "Partner closely with Design and Product teams from requirements definition through feature release.",
         ],
       },
       {
-        role: "Junior Developer",
-        company: "Company B",
-        period: "2022 — 2024",
+        role: "Programmer",
+        company: "International Distribution Joint Stock Company",
+        period: "2025 — 2026",
         location: "Ho Chi Minh City",
         highlights: [
           "Built internal administration interfaces with React.",
@@ -164,19 +222,55 @@ const content: Record<Lang, Content> = {
     ],
     projects: [
       {
-        name: "Hieu Nghia Group",
-        description: "Corporate website deployed on Cloudflare Pages with a custom domain and HTTPS.",
-        tech: ["HTML", "CSS", "Cloudflare Pages"],
+        slug: "portfolio-cv",
+        name: "Portfolio & CV",
+        description:
+          "Bilingual (Vietnamese – English) personal portfolio with light/dark themes and PDF CV export.",
+        tech: ["Next.js", "TypeScript", "CSS", "Cloudflare Pages"],
+        year: "2026",
+        role: "Design & development",
+        image: "/projects/portfolio-cv.jpg",
         link: "https://hieunghiagroup.online",
+        context:
+          "A professional personal site was needed to present experience and projects to recruiters, readable in both Vietnamese and English, with a printable CV.",
+        solution: [
+          "Built with Next.js (App Router) as a static export, hosted on Cloudflare Pages with a custom domain.",
+          "Bilingual via two route groups with their own root layouts, plus hreflang tags and a sitemap so search engines understand both translations.",
+          "Persisted light/dark theme with no flash on load; theme switching animated with the View Transitions API.",
+          "Motion built with CSS scroll-driven animations, automatically disabled for users who prefer reduced motion.",
+          "Social preview images generated at build time; the CV exports to an A4 PDF.",
+        ],
+        results: [
+          "All content lives in a single data file — updating the CV never requires touching the UI.",
+          "Fully static, fast to load and free to host.",
+        ],
       },
       {
-        name: "Portfolio & CV",
-        description: "Bilingual (Vietnamese – English) personal portfolio with light/dark themes and PDF CV export.",
-        tech: ["Next.js", "TypeScript", "Cloudflare Pages"],
+        slug: "hieu-nghia-group",
+        name: "Hieu Nghia Group",
+        description: "One-page company website deployed on Cloudflare Pages.",
+        tech: ["HTML", "CSS", "Cloudflare Pages"],
+        year: "2026",
+        role: "Development & deployment",
+        image: "/projects/hieu-nghia-group.jpg",
+        context:
+          "The hieunghiagroup.online domain pointed to Cloudflare but showed no page at all. The cause had to be found and a company website put online.",
+        solution: [
+          "Diagnosed the issue: the Cloudflare Pages project had never been deployed (error 522) and the domain had no DNS records.",
+          "Built a one-page site in plain HTML/CSS with light/dark support and a responsive layout.",
+          "Deployed with Wrangler, attached the custom domain and configured CNAME records for the apex and www.",
+        ],
+        results: [
+          "The domain came back online over HTTPS and later became the home of this portfolio.",
+        ],
       },
     ],
     education: [
-      { school: "University name", degree: "Bachelor of Information Technology", period: "2018 — 2022" },
+      {
+        school: "Ho Chi Minh City University of Technology (HUTECH)",
+        degree: "Bachelor of Information Technology",
+        period: "2020 — 2025",
+      },
     ],
     languages: [
       { name: "Vietnamese", level: "Native" },

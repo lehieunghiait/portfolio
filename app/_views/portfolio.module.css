@@ -508,3 +508,30 @@
 /* Chip kỹ năng nảy lên khi rê chuột */
 .chips li { transition: transform .25s, border-color .25s, color .25s; }
 .chips li:hover { transform: translateY(-3px); border-color: var(--accent); color: var(--accent); }
+
+/* =====================================================================
+   Thẻ dự án có ảnh chụp, form liên hệ
+   ===================================================================== */
+.coverShot {
+  position: absolute; z-index: 1; left: 50%; bottom: -12%; width: 84%; height: auto;
+  border-radius: 10px 10px 0 0; translate: -50% 0;
+  box-shadow: 0 -10px 40px rgb(0 0 0 / .25);
+  transition: transform .6s cubic-bezier(.2, .7, .2, 1);
+}
+.project:hover .coverShot { transform: translateY(-10px) scale(1.03); }
+.projectMeta { font-size: .8rem !important; color: var(--faint) !important; font-weight: 500; margin: 0 !important; }
+.projectMore { font-weight: 600; color: var(--accent); font-size: .93rem; margin-top: 4px; }
+.projectMore .arrow { transition: transform .25s; }
+.project:hover .projectMore .arrow { transform: translateX(4px); }
+
+.contact :global(.contact-form) { margin: 32px auto 0; max-width: 620px; text-align: left; }
+.contactAlt { margin-top: 18px; color: var(--muted); font-size: .95rem; }
+.contactAlt a { color: var(--accent); font-weight: 600; }
+.contactAlt a:hover { text-decoration: underline; }
+.contact .ctaRow { margin-top: 18px; }
+
+/* Menu nhiều mục hơn: ẩn liên kết sớm hơn trên màn hình vừa */
+@media (max-width: 1000px) {
+  .navLinks { display: none; }
+  :global(.lang-switch) { margin-left: auto; }
+}

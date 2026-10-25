@@ -1,6 +1,5 @@
 import { getProfile, type Lang } from "@/data/profile";
-import { paths, ui } from "@/data/i18n";
-import { PrintButton } from "../components/print-button";
+import { cvPdf, paths, ui } from "@/data/i18n";
 import { ThemeToggle } from "../components/theme-toggle";
 import { LangSwitch } from "../components/lang-switch";
 import "./cv.css";
@@ -23,7 +22,7 @@ export function Cv({ lang }: { lang: Lang }) {
       <div className="cv-toolbar no-print">
         <a href={paths[lang].home} className="cv-back">{t.cv.back}</a>
         <div className="cv-tools">
-          <LangSwitch lang={lang} page="cv" />
+          <LangSwitch lang={lang} hrefs={{ vi: paths.vi.cv, en: paths.en.cv }} />
           <ThemeToggle labels={t.theme} />
         </div>
       </div>
@@ -68,7 +67,7 @@ export function Cv({ lang }: { lang: Lang }) {
             </ul>
           </div>
 
-          <PrintButton label={t.cv.download} />
+          <a href={cvPdf[lang]} className="btn no-print" download>{t.cv.download}</a>
         </aside>
 
         <div className="content">

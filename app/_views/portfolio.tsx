@@ -1,11 +1,11 @@
 import { getProfile, type Lang } from "@/data/profile";
-import { paths, ui } from "@/data/i18n";
+import { cvPdf, paths, projectPath, ui } from "@/data/i18n";
+import { contactEndpoint, turnstileSiteKey } from "@/data/site";
 import s from "./portfolio.module.css";
 import { Typewriter } from "../components/typewriter";
 import { CountUp } from "../components/count-up";
-import { Spotlight } from "../components/spotlight";
-import { ThemeToggle } from "../components/theme-toggle";
-import { LangSwitch } from "../components/lang-switch";
+import { ContactForm } from "../components/contact-form";
+import { SiteFooter, SiteHeader } from "./site-header";
 
 // Mỗi dự án có một ảnh bìa gradient riêng, không cần file ảnh
 const covers = [
@@ -28,40 +28,11 @@ export function Portfolio({ lang }: { lang: Lang }) {
   const profile = getProfile(lang);
   const t = ui[lang];
   const words = profile.name.split(" ");
-  const initials = words.slice(-2).map((w) => w[0]).join("");
   const firstName = words[words.length - 1];
-  const nav = [
-    { href: "#about", label: t.nav.about },
-    { href: "#experience", label: t.nav.experience },
-    { href: "#projects", label: t.nav.projects },
-    { href: "#contact", label: t.nav.contact },
-  ];
 
   return (
     <>
-      <Spotlight />
-      <div className={s.progress} aria-hidden="true" />
-      <div className={s.cursorGlow} aria-hidden="true" />
-      <div className={s.backdrop} aria-hidden="true">
-        <span className={s.blob1} />
-        <span className={s.blob2} />
-        <span className={s.blob3} />
-      </div>
-
-      <nav className={s.nav}>
-        <div className={s.navInner}>
-          <a href="#top" className={s.logo}>
-            <span className={s.logoMark}>{initials}</span>
-            <span className={s.logoText}>{profile.name}</span>
-          </a>
-          <ul className={s.navLinks}>
-            {nav.map((n) => <li key={n.href}><a href={n.href}>{n.label}</a></li>)}
-          </ul>
-          <LangSwitch lang={lang} page="home" />
-          <ThemeToggle labels={t.theme} />
-          <a href={paths[lang].cv} className={s.navCta}>{t.viewCv}</a>
-        </div>
-      </nav>
+      <SiteHeader lang={lang} hrefs={{ vi: paths.vi.home, en: paths.en.home }} onHome />
 
       <main id="top" className={s.main}>
         {/* Hero */}
@@ -193,28 +164,27 @@ export function Portfolio({ lang }: { lang: Lang }) {
         <section id="projects" className={`${s.section} ${s.reveal}`}>
           <SectionHead index="03" eyebrow={t.nav.projects} title={t.projectsTitle} />
           <div className={s.projects}>
-            {profile.projects.map((p, i) => {
-              const Card = p.link ? "a" : "div";
-              return (
-                <Card
-                  key={p.name}
-                  className={s.project}
-                  data-spotlight
-                  {...(p.link ? { href: p.link, target: "_blank", rel: "noreferrer" } : {})}
-                >
-                  <div className={s.cover} style={{ background: covers[i % covers.length] }}>
+            {profile.projects.map((p, i) => (
+              <a key={p.slug} href={projectPath(lang, p.slug)} className={s.project} data-spotlight>
+                <div className={s.cover} style={{ background: covers[i % covers.length] }}>
+                  {p.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className={s.coverShot} src={p.image} alt="" width={1280} height={800} loading="lazy" />
+                  ) : (
                     <span>{p.name.split(" ").map((w) => w[0]).join("").slice(0, 3)}</span>
-                  </div>
-                  <div className={s.projectBody}>
-                    <h3>{p.name} {p.link && <span className={s.arrow} aria-hidden>↗</span>}</h3>
-                    <p>{p.description}</p>
-                    <ul className={s.chips}>
-                      {p.tech.map((tech) => <li key={tech}>{tech}</li>)}
-                    </ul>
-                  </div>
-                </Card>
-              );
-            })}
+                  )}
+                </div>
+                <div className={s.projectBody}>
+                  <p className={s.projectMeta}>{p.year} · {p.role}</p>
+                  <h3>{p.name}</h3>
+                  <p>{p.description}</p>
+                  <ul className={s.chips}>
+                    {p.tech.map((tech) => <li key={tech}>{tech}</li>)}
+                  </ul>
+                  <span className={s.projectMore}>{t.viewProject} <span className={s.arrow} aria-hidden>→</span></span>
+                </div>
+              </a>
+            ))}
           </div>
         </section>
 
@@ -227,19 +197,18 @@ export function Portfolio({ lang }: { lang: Lang }) {
             {t.contactTitle[0]}<br /><span className={s.gradientText}>{t.contactTitle[1]}</span> {t.contactTitle[2]}
           </h2>
           <p className={s.lead}>{t.contactLead}</p>
+          <ContactForm endpoint={contactEndpoint} siteKey={turnstileSiteKey} lang={lang} labels={t.form} />
+          <p className={s.contactAlt}>
+            {t.form.orEmail} <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            {profile.phone && <> · <a href={`tel:${profile.phone.replace(/\s/g, "")}`}>{profile.phone}</a></>}
+          </p>
           <div className={s.ctaRow}>
-            <a href={`mailto:${profile.email}`} className={s.btnPrimary}>✉ {profile.email}</a>
-            {profile.phone && (
-              <a href={`tel:${profile.phone.replace(/\s/g, "")}`} className={s.btnGhost}>{profile.phone}</a>
-            )}
+            <a href={cvPdf[lang]} className={s.btnGhost} download>↓ {t.downloadCv}</a>
           </div>
         </section>
       </main>
 
-      <footer className={s.footer}>
-        <p>© {new Date().getFullYear()} {profile.name}. {t.footer}</p>
-        <a href="#top">{t.backToTop}</a>
-      </footer>
+      <SiteFooter lang={lang} />
     </>
   );
 }

@@ -25,28 +25,35 @@ export function RootShell({ lang, children }: { lang: Lang; children: React.Reac
   );
 }
 
-// Tiêu đề, mô tả và liên kết hreflang giữa hai bản ngôn ngữ của cùng một trang
-export function pageMetadata(lang: Lang, page: "home" | "cv"): Metadata {
+// Tiêu đề, mô tả và liên kết hreflang giữa hai bản ngôn ngữ của cùng một trang.
+// `hrefs`: đường dẫn trang này ở mỗi ngôn ngữ; `title` bỏ trống thì dùng tên + chức danh.
+export function pageMetadata(
+  lang: Lang,
+  { hrefs, title, description, type = "profile" }:
+  { hrefs: Record<Lang, string>; title?: string; description?: string; type?: "profile" | "article" | "website" },
+): Metadata {
   const profile = getProfile(lang);
   const name = `${profile.name} — ${profile.title}`;
+  const fullTitle = title ? `${title} | ${profile.name}` : name;
+  const desc = description ?? profile.summary;
   return {
     metadataBase: new URL(profile.website),
-    title: page === "cv" ? `CV — ${name}` : name,
-    description: profile.summary,
+    title: fullTitle,
+    description: desc,
     alternates: {
-      canonical: paths[lang][page],
-      languages: { vi: paths.vi[page], en: paths.en[page], "x-default": paths.vi[page] },
+      canonical: hrefs[lang],
+      languages: { vi: hrefs.vi, en: hrefs.en, "x-default": hrefs.vi },
     },
     // Ảnh xem trước lấy từ opengraph-image.tsx của mỗi ngôn ngữ
     openGraph: {
-      title: name,
-      description: profile.summary,
-      url: paths[lang][page],
+      title: fullTitle,
+      description: desc,
+      url: hrefs[lang],
       siteName: profile.name,
       locale: lang === "vi" ? "vi_VN" : "en_US",
       alternateLocale: lang === "vi" ? "en_US" : "vi_VN",
-      type: "profile",
+      type,
     },
-    twitter: { card: "summary_large_image", title: name, description: profile.summary },
+    twitter: { card: "summary_large_image", title: fullTitle, description: desc },
   };
 }

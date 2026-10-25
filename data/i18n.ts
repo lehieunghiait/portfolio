@@ -2,14 +2,23 @@
 import type { Lang } from "./profile";
 
 // Đường dẫn của mỗi ngôn ngữ: tiếng Việt ở gốc, tiếng Anh dưới /en
-export const paths: Record<Lang, { home: string; cv: string }> = {
-  vi: { home: "/", cv: "/cv" },
-  en: { home: "/en", cv: "/en/cv" },
-};
+const prefix: Record<Lang, string> = { vi: "", en: "/en" };
+
+export const paths = {
+  vi: { home: "/", cv: "/cv", blog: "/blog" },
+  en: { home: "/en", cv: "/en/cv", blog: "/en/blog" },
+} satisfies Record<Lang, { home: string; cv: string; blog: string }>;
+
+export const projectPath = (lang: Lang, slug: string) => `${prefix[lang]}/projects/${slug}`;
+export const postPath = (lang: Lang, slug: string) => `${prefix[lang]}/blog/${slug}`;
+// Mục trên trang chủ, ví dụ "/#projects" hoặc "/en#projects"
+export const homeSection = (lang: Lang, id: string) => `${paths[lang].home}#${id}`;
+// File CV PDF tạo lúc build (scripts/build-pdf.mjs)
+export const cvPdf: Record<Lang, string> = { vi: "/Le-Hieu-Nghia-CV-vi.pdf", en: "/Le-Hieu-Nghia-CV-en.pdf" };
 
 export const ui = {
   vi: {
-    nav: { about: "Giới thiệu", experience: "Kinh nghiệm", projects: "Dự án", contact: "Liên hệ" },
+    nav: { about: "Giới thiệu", experience: "Kinh nghiệm", projects: "Dự án", blog: "Blog", contact: "Liên hệ" },
     viewCv: "Xem CV",
     available: "Đang tìm kiếm cơ hội mới",
     hello: (name: string) => `Xin chào, tôi là ${name}`,
@@ -20,12 +29,48 @@ export const ui = {
     aboutTitle: "Giới thiệu & chuyên môn",
     experienceTitle: "Kinh nghiệm làm việc",
     projectsTitle: "Dự án tiêu biểu",
+    viewProject: "Xem chi tiết",
     contactTitle: ["Hãy cùng trao đổi về", "dự án tiếp theo", "của bạn."],
-    contactLead: "Tôi luôn sẵn sàng trao đổi về cơ hội việc làm, hợp tác dự án hoặc tư vấn giải pháp kỹ thuật. Hãy gửi email để chúng ta bắt đầu.",
+    contactLead: "Tôi luôn sẵn sàng trao đổi về cơ hội việc làm, hợp tác dự án hoặc tư vấn giải pháp kỹ thuật.",
+    downloadCv: "Tải CV (PDF)",
     footer: "Thiết kế & phát triển bằng Next.js.",
     backToTop: "Lên đầu trang ↑",
     theme: { toLight: "Chuyển sang giao diện sáng", toDark: "Chuyển sang giao diện tối" },
     language: "Ngôn ngữ",
+    form: {
+      name: "Họ và tên",
+      email: "Email",
+      message: "Nội dung",
+      messagePlaceholder: "Bạn muốn trao đổi về điều gì?",
+      send: "Gửi tin nhắn",
+      sending: "Đang gửi…",
+      success: "Cảm ơn bạn! Tin nhắn đã được gửi, tôi sẽ phản hồi sớm.",
+      error: "Chưa gửi được tin nhắn. Vui lòng thử lại hoặc gửi email trực tiếp.",
+      captcha: "Vui lòng hoàn tất bước xác minh chống spam.",
+      orEmail: "Hoặc gửi email trực tiếp:",
+    },
+    project: {
+      back: "← Tất cả dự án",
+      year: "Năm",
+      role: "Vai trò",
+      stack: "Công nghệ",
+      context: "Bối cảnh",
+      solution: "Giải pháp",
+      results: "Kết quả",
+      visit: "Xem trang web",
+      more: "Dự án khác",
+      screenshotAlt: (name: string) => `Ảnh chụp màn hình dự án ${name}`,
+    },
+    blog: {
+      title: "Blog",
+      heading: "Ghi chú kỹ thuật",
+      lead: "Những điều tôi học được khi xây dựng và vận hành sản phẩm web.",
+      readMore: "Đọc tiếp",
+      back: "← Tất cả bài viết",
+      minRead: (n: number) => `${n} phút đọc`,
+      date: (d: string) => new Date(d).toLocaleDateString("vi-VN", { day: "numeric", month: "long", year: "numeric" }),
+      empty: "Chưa có bài viết nào.",
+    },
     cv: {
       back: "← Portfolio",
       download: "Tải CV (PDF)",
@@ -39,7 +84,7 @@ export const ui = {
     },
   },
   en: {
-    nav: { about: "About", experience: "Experience", projects: "Projects", contact: "Contact" },
+    nav: { about: "About", experience: "Experience", projects: "Projects", blog: "Blog", contact: "Contact" },
     viewCv: "View CV",
     available: "Open to new opportunities",
     hello: (name: string) => `Hi, I'm ${name}`,
@@ -50,12 +95,48 @@ export const ui = {
     aboutTitle: "About & expertise",
     experienceTitle: "Professional experience",
     projectsTitle: "Selected projects",
+    viewProject: "View case study",
     contactTitle: ["Let's discuss", "your next project", "together."],
-    contactLead: "I'm open to job opportunities, project collaborations and technical consulting. Send me an email and let's get started.",
+    contactLead: "I'm open to job opportunities, project collaborations and technical consulting.",
+    downloadCv: "Download CV (PDF)",
     footer: "Designed & built with Next.js.",
     backToTop: "Back to top ↑",
     theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme" },
     language: "Language",
+    form: {
+      name: "Full name",
+      email: "Email",
+      message: "Message",
+      messagePlaceholder: "What would you like to discuss?",
+      send: "Send message",
+      sending: "Sending…",
+      success: "Thank you! Your message has been sent — I'll get back to you soon.",
+      error: "Your message could not be sent. Please try again or email me directly.",
+      captcha: "Please complete the anti-spam check.",
+      orEmail: "Or email me directly:",
+    },
+    project: {
+      back: "← All projects",
+      year: "Year",
+      role: "Role",
+      stack: "Tech stack",
+      context: "Context",
+      solution: "Solution",
+      results: "Results",
+      visit: "Visit website",
+      more: "More projects",
+      screenshotAlt: (name: string) => `Screenshot of the ${name} project`,
+    },
+    blog: {
+      title: "Blog",
+      heading: "Technical notes",
+      lead: "Things I've learned building and running web products.",
+      readMore: "Read more",
+      back: "← All posts",
+      minRead: (n: number) => `${n} min read`,
+      date: (d: string) => new Date(d).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }),
+      empty: "No posts yet.",
+    },
     cv: {
       back: "← Portfolio",
       download: "Download CV (PDF)",

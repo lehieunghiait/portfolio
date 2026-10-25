@@ -1,0 +1,17 @@
+# Worker nhận form liên hệ từ portfolio và gửi email qua Cloudflare Email Service.
+# Deploy: cd workers/contact && npx wrangler deploy
+name = "portfolio-contact"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+# Chỉ cho phép gửi tới hộp thư của chủ trang (địa chỉ đã xác minh — miễn phí)
+[[send_email]]
+name = "EMAIL"
+destination_address = "lehieunghia2402@gmail.com"
+
+[vars]
+TO_EMAIL = "lehieunghia2402@gmail.com"
+FROM_EMAIL = "contact@hieunghiagroup.online"
+ALLOWED_ORIGINS = "https://hieunghiagroup.online,https://www.hieunghiagroup.online,https://hieunghiagroup.pages.dev,http://localhost:3000"
+
+# Bí mật Turnstile đặt bằng: npx wrangler secret put TURNSTILE_SECRET

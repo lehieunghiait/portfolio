@@ -1,5 +1,5 @@
-import { ProjectDetail } from "../../../_views/project";
-import { pageMetadata } from "../../../_shared/root-layout";
+import { ProjectDetail } from "@/app/_views/project";
+import { pageMetadata } from "@/app/_shared/root-layout";
 import { getProfile } from "@/data/profile";
 import { projectPath } from "@/data/i18n";
 

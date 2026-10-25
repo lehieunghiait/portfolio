@@ -8,8 +8,8 @@ import puppeteer from "puppeteer-core";
 
 const OUT = join(process.cwd(), "out");
 const PDFS = [
-  { page: "/cv", file: "Le-Hieu-Nghia-CV-vi.pdf" },
-  { page: "/en/cv", file: "Le-Hieu-Nghia-CV-en.pdf" },
+  { page: "/cv", file: "Le-Hieu-Nghia-CV-en.pdf" },
+  { page: "/vi/cv", file: "Le-Hieu-Nghia-CV-vi.pdf" },
 ];
 const CHROME_PATHS = [
   process.env.CHROME_PATH,

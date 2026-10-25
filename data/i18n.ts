@@ -1,17 +1,17 @@
 // Chữ trên giao diện (menu, nút, tiêu đề mục...) cho từng ngôn ngữ.
 import type { Lang } from "./profile";
 
-// Đường dẫn của mỗi ngôn ngữ: tiếng Việt ở gốc, tiếng Anh dưới /en
-const prefix: Record<Lang, string> = { vi: "", en: "/en" };
+// Đường dẫn của mỗi ngôn ngữ: tiếng Anh (mặc định) ở gốc, tiếng Việt dưới /vi
+const prefix: Record<Lang, string> = { en: "", vi: "/vi" };
 
 export const paths = {
-  vi: { home: "/", cv: "/cv", blog: "/blog" },
-  en: { home: "/en", cv: "/en/cv", blog: "/en/blog" },
+  en: { home: "/", cv: "/cv", blog: "/blog" },
+  vi: { home: "/vi", cv: "/vi/cv", blog: "/vi/blog" },
 } satisfies Record<Lang, { home: string; cv: string; blog: string }>;
 
 export const projectPath = (lang: Lang, slug: string) => `${prefix[lang]}/projects/${slug}`;
 export const postPath = (lang: Lang, slug: string) => `${prefix[lang]}/blog/${slug}`;
-// Mục trên trang chủ, ví dụ "/#projects" hoặc "/en#projects"
+// Mục trên trang chủ, ví dụ "/#projects" hoặc "/vi#projects"
 export const homeSection = (lang: Lang, id: string) => `${paths[lang].home}#${id}`;
 // File CV PDF tạo lúc build (scripts/build-pdf.mjs)
 export const cvPdf: Record<Lang, string> = { vi: "/Le-Hieu-Nghia-CV-vi.pdf", en: "/Le-Hieu-Nghia-CV-en.pdf" };
@@ -30,6 +30,7 @@ export const ui = {
     experienceTitle: "Kinh nghiệm làm việc",
     projectsTitle: "Dự án tiêu biểu",
     viewProject: "Xem chi tiết",
+    techStack: "Công nghệ sử dụng",
     contactTitle: ["Hãy cùng trao đổi về", "dự án tiếp theo", "của bạn."],
     contactLead: "Tôi luôn sẵn sàng trao đổi về cơ hội việc làm, hợp tác dự án hoặc tư vấn giải pháp kỹ thuật.",
     downloadCv: "Tải CV (PDF)",
@@ -96,6 +97,7 @@ export const ui = {
     experienceTitle: "Professional experience",
     projectsTitle: "Selected projects",
     viewProject: "View case study",
+    techStack: "Tech stack",
     contactTitle: ["Let's discuss", "your next project", "together."],
     contactLead: "I'm open to job opportunities, project collaborations and technical consulting.",
     downloadCv: "Download CV (PDF)",

@@ -1,5 +1,5 @@
-import { BlogIndex } from "../../../_views/blog";
-import { pageMetadata } from "../../../_shared/root-layout";
+import { BlogIndex } from "@/app/_views/blog";
+import { pageMetadata } from "@/app/_shared/root-layout";
 import { paths, ui } from "@/data/i18n";
 
 const LANG = "en";

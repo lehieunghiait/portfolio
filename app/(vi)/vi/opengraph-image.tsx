@@ -1,5 +1,5 @@
 import { getProfile } from "@/data/profile";
-import { ogSize, renderOgImage } from "../_shared/og";
+import { ogSize, renderOgImage } from "@/app/_shared/og";
 
 export const alt = `${getProfile("vi").name} — ${getProfile("vi").title}`;
 export const size = ogSize;

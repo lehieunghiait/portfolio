@@ -310,22 +310,6 @@
 
 /* Chấm sáng bay quanh ảnh đại diện */
 
-/* Dải kỹ năng chạy ngang vô tận */
-.marquee {
-  margin-top: 56px; overflow: hidden; padding: 6px 0;
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-}
-.marqueeTrack { display: flex; width: max-content; animation: marquee 32s linear infinite; }
-.marquee:hover .marqueeTrack { animation-play-state: paused; }
-.marqueeTrack ul { display: flex; flex: none; }
-.marqueeTrack li {
-  display: flex; align-items: center; gap: 28px; padding-right: 28px; white-space: nowrap;
-  font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 700; letter-spacing: -.02em; color: var(--marquee);
-  transition: color .3s;
-}
-.marqueeTrack li:hover { color: var(--text); }
-.marqueeTrack li span { font-size: .7em; color: var(--accent); }
-@keyframes marquee { to { transform: translateX(-50%); } }
 
 /* Thẻ: nghiêng nhẹ và nổi lên khi rê chuột */
 .stats li { transition: transform .3s; }

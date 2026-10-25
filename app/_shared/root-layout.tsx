@@ -10,13 +10,13 @@ const font = Be_Vietnam_Pro({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-// Áp dụng giao diện đã lưu trước khi trang hiển thị để không bị nháy sai màu
+// Giao diện tối là mặc định; nếu người xem đã chọn giao diện khác thì áp dụng trước khi trang hiển thị
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}})();`;
 
 // Dùng chung cho hai root layout (tiếng Việt và tiếng Anh), chỉ khác thuộc tính lang
 export function RootShell({ lang, children }: { lang: Lang; children: React.ReactNode }) {
   return (
-    <html lang={lang} className={font.variable} suppressHydrationWarning>
+    <html lang={lang} className={font.variable} data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
@@ -42,7 +42,7 @@ export function pageMetadata(
     description: desc,
     alternates: {
       canonical: hrefs[lang],
-      languages: { vi: hrefs.vi, en: hrefs.en, "x-default": hrefs.vi },
+      languages: { en: hrefs.en, vi: hrefs.vi, "x-default": hrefs.en },
     },
     // Ảnh xem trước lấy từ opengraph-image.tsx của mỗi ngôn ngữ
     openGraph: {

@@ -5,6 +5,7 @@ import s from "./portfolio.module.css";
 import { Typewriter } from "../components/typewriter";
 import { CountUp } from "../components/count-up";
 import { ContactForm } from "../components/contact-form";
+import { TechMarquee } from "../components/tech-marquee";
 import { SiteFooter, SiteHeader } from "./site-header";
 
 // Mỗi dự án có một ảnh bìa gradient riêng, không cần file ảnh
@@ -94,16 +95,8 @@ export function Portfolio({ lang }: { lang: Lang }) {
           ))}
         </ul>
 
-        {/* Dải kỹ năng chạy ngang */}
-        <div className={s.marquee} aria-hidden="true">
-          <div className={s.marqueeTrack}>
-            {[0, 1].map((k) => (
-              <ul key={k}>
-                {profile.skills.flatMap((g) => g.items).map((i) => <li key={i}>{i}<span>✦</span></li>)}
-              </ul>
-            ))}
-          </div>
-        </div>
+        {/* Dải logo công nghệ chạy ngang */}
+        <TechMarquee items={profile.skills.flatMap((g) => g.items)} label={t.techStack} />
 
         {/* About + skills */}
         <section id="about" className={`${s.section} ${s.reveal}`}>

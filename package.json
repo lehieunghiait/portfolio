@@ -17,6 +17,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "puppeteer-core": "^25.16.0",
+    "simple-icons": "^16.35.0",
     "typescript": "^5"
   }
 }

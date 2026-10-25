@@ -1,9 +1,9 @@
-import { BlogPost } from "../../../../_views/blog";
-import { pageMetadata } from "../../../../_shared/root-layout";
+import { BlogPost } from "@/app/_views/blog";
+import { pageMetadata } from "@/app/_shared/root-layout";
 import { getPost, posts } from "@/data/posts";
 import { postPath } from "@/data/i18n";
 
-const LANG = "en";
+const LANG = "vi";
 
 export const dynamicParams = false;
 export function generateStaticParams() {

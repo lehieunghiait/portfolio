@@ -2,7 +2,8 @@
 // Thông tin chung ở `shared`; phần chữ cần dịch nằm ở `content.vi` và `content.en`.
 
 export type Lang = "vi" | "en";
-export const langs: Lang[] = ["vi", "en"];
+// Ngôn ngữ đầu tiên là mặc định (đặt ở đường dẫn gốc)
+export const langs: Lang[] = ["en", "vi"];
 
 export type Experience = {
   role: string;
